@@ -1,0 +1,273 @@
+pi@raspberrypi ~ $ dir
+Desktop  monitor.py  ocr_pi.png  python_games
+pi@raspberrypi ~ $ cd TrialProject
+pi@raspberrypi ~/TrialProject $ ls
+monitor.py
+pi@raspberrypi ~/TrialProject $ git init
+Initialized empty Git repository in /home/pi/TrialProject/.git/
+pi@raspberrypi ~/TrialProject $ git remote add origin
+usage: git remote add [<options>] <name> <url>
+
+    -f, --fetch           fetch the remote branches
+    --tags                import all tags and associated objects when fetching
+                          or do not fetch any tag at all (--no-tags)
+    -t, --track <branch>  branch(es) to track
+    -m, --master <branch>
+                          master branch
+    --mirror[=<push|fetch>]
+                          set up remote as a mirror to push to or fetch from
+
+pi@raspberrypi ~/TrialProject $ https://github.com/marynm/GroupCProjectbash: https://github.com/marynm/GroupCProject: No such file or directory
+pi@raspberrypi ~/TrialProject $ git remote add origin https://github.com/marynm/GroupCProject.git
+pi@raspberrypi ~/TrialProject $ git add -A
+pi@raspberrypi ~/TrialProject $ git status
+# On branch master
+#
+# Initial commit
+#
+# Changes to be committed:
+#   (use "git rm --cached <file>..." to unstage)
+#
+#	new file:   monitor.py
+#
+pi@raspberrypi ~/TrialProject $ git commit -m "This is my monitor code for the Trial Project"
+
+*** Please tell me who you are.
+
+Run
+
+  git config --global user.email "you@example.com"
+  git config --global user.name "Your Name"
+
+to set your account's default identity.
+Omit --global to set the identity only in this repository.
+
+fatal: empty ident  <pi@raspberrypi.(none)> not allowed
+pi@raspberrypi ~/TrialProject $ git config -- global user.email "preetinigam@cmail.carleton.ca"
+error: key does not contain a section: global
+pi@raspberrypi ~/TrialProject $ git config --global user.email "preetinigam@cmail.carleton.ca"
+pi@raspberrypi ~/TrialProject $ git config --global user.name  "preeti nigam"pi@raspberrypi ~/TrialProject $ git commit -m "This is my monitor code for the Trial Project"
+[master (root-commit) 2969c88] This is my monitor code for the Trial Project
+ 1 file changed, 12 insertions(+)
+ create mode 100644 monitor.py
+pi@raspberrypi ~/TrialProject $ git push origin master
+Username for 'https://github.com': preetinigam
+Password for 'https://preetinigam@github.com': 
+To https://github.com/marynm/GroupCProject.git
+ ! [rejected]        master -> master (non-fast-forward)
+error: failed to push some refs to 'https://github.com/marynm/GroupCProject.git'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
+hint: before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+pi@raspberrypi ~/TrialProject $ git push -uorigin 
+error: unknown switch `o'
+usage: git push [<options>] [<repository> [<refspec>...]]
+
+    -v, --verbose         be more verbose
+    -q, --quiet           be more quiet
+    --repo <repository>   repository
+    --all                 push all refs
+    --mirror              mirror all refs
+    --delete              delete refs
+    --tags                push tags (can't be used with --all or --mirror)
+    -n, --dry-run         dry run
+    --porcelain           machine-readable output
+    -f, --force           force updates
+    --recurse-submodules[=<check>]
+                          controls recursive pushing of submodules
+    --thin                use thin pack
+    --receive-pack <receive-pack>
+                          receive pack program
+    --exec <receive-pack>
+                          receive pack program
+    -u, --set-upstream    set upstream for git pull/status
+    --progress            force progress reporting
+    --prune               prune locally removed refs
+
+pi@raspberrypi ~/TrialProject $ git checkout Trial-Project
+error: pathspec 'Trial-Project' did not match any file(s) known to git.
+pi@raspberrypi ~/TrialProject $ cd..
+bash: cd..: command not found
+pi@raspberrypi ~/TrialProject $ cd ..
+pi@raspberrypi ~ $ git clone https://github.com/marynm/GroupCProject.git
+Cloning into 'GroupCProject'...
+remote: Counting objects: 3, done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 3
+Unpacking objects: 100% (3/3), done.
+pi@raspberrypi ~ $ cd GroupCProject/
+pi@raspberrypi ~/GroupCProject $ git status
+# On branch master
+nothing to commit (working directory clean)
+pi@raspberrypi ~/GroupCProject $ git status
+# On branch master
+nothing to commit (working directory clean)
+pi@raspberrypi ~/GroupCProject $ git checkout Trial-Project
+Branch Trial-Project set up to track remote branch Trial-Project from origin.
+Switched to a new branch 'Trial-Project'
+pi@raspberrypi ~/GroupCProject $ cp ../TrialProject/
+.git/       monitor.py  
+pi@raspberrypi ~/GroupCProject $ cp ../TrialProject/monitor.py
+cp: missing destination file operand after `../TrialProject/monitor.py'
+Try `cp --help' for more information.
+pi@raspberrypi ~/GroupCProject $ cp ../TrialProject/monitor.py ./
+pi@raspberrypi ~/GroupCProject $ git status
+# On branch Trial-Project
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	monitor.py
+nothing added to commit but untracked files present (use "git add" to track)
+pi@raspberrypi ~/GroupCProject $ git add -A
+pi@raspberrypi ~/GroupCProject $ git status
+# On branch Trial-Project
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	new file:   monitor.py
+#
+pi@raspberrypi ~/GroupCProject $ git commit -m
+error: switch `m' requires a value
+usage: git commit [options] [--] <filepattern>...
+
+    -q, --quiet           suppress summary after successful commit
+    -v, --verbose         show diff in commit message template
+
+Commit message options
+    -F, --file <file>     read message from file
+    --author <author>     override author for commit
+    --date <date>         override date for commit
+    -m, --message <message>
+                          commit message
+    -c, --reedit-message <commit>
+                          reuse and edit message from specified commit
+    -C, --reuse-message <commit>
+                          reuse message from specified commit
+    --fixup <commit>      use autosquash formatted message to fixup specified commit
+    --squash <commit>     use autosquash formatted message to squash specified commit
+    --reset-author        the commit is authored by me now (used with -C/-c/--amend)
+    -s, --signoff         add Signed-off-by:
+    -t, --template <file>
+                          use specified template file
+    -e, --edit            force edit of commit
+    --cleanup <default>   how to strip spaces and #comments from message
+    --status              include status in commit message template
+    -S, --gpg-sign[=<key id>]
+                          GPG sign commit
+
+Commit contents options
+    -a, --all             commit all changed files
+    -i, --include         add specified files to index for commit
+    --interactive         interactively add files
+    -p, --patch           interactively add changes
+    -o, --only            commit only specified files
+    -n, --no-verify       bypass pre-commit hook
+    --dry-run             show what would be committed
+    --short               show status concisely
+    --branch              show branch information
+    --porcelain           machine-readable output
+    -z, --null            terminate entries with NUL
+    --amend               amend previous commit
+    --no-post-rewrite     bypass post-rewrite hook
+    -u, --untracked-files[=<mode>]
+                          show untracked files, optional modes: all, normal, no. (Default: all)
+
+pi@raspberrypi ~/GroupCProject $ git commit -m "Monitor code added"
+[Trial-Project cd30075] Monitor code added
+ 1 file changed, 12 insertions(+)
+ create mode 100644 monitor.py
+pi@raspberrypi ~/GroupCProject $ git push origin 
+HEAD                   origin/HEAD            origin/Trial-Project 
+master                 origin/master          Trial-Project 
+pi@raspberrypi ~/GroupCProject $ git push origin Trial-Project
+Username for 'https://github.com': preetinigam
+Password for 'https://preetinigam@github.com': 
+Counting objects: 4, done.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 524 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/marynm/GroupCProject.git
+   b3b578d..cd30075  Trial-Project -> Trial-Project
+pi@raspberrypi ~/GroupCProject $ git status
+# On branch Trial-Project
+nothing to commit (working directory clean)
+pi@raspberrypi ~/GroupCProject $ sudo apt-get install mplayer
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+T
+0 upgraded, 36 newly installed, 0 to remove and 185 not upgraded.
+Need to get 9,483 kB of archives.
+After this operation, 21.2 MB of additional disk space will be used.
+Do you want to continue [Y/n]? y
+Get:1 http://mirrordirector.raspbian.org/raspbian/ wheezy/main libgpm2 armhf 1.20.4-6 [34.9 kB]
+
+Fetched 9,483 kB in 13s (706 kB/s)                                             
+Extracting templates from packages: 100%
+Selecting previously unselected package libgpm2:armhf.
+(Reading database ... 62340 files and directories currently installed.)
+
+pi@raspberrypi ~/GroupCProject $ mplayer 99.246.112.101/music/September.ogg
+Creating config file: /home/pi/.mplayer/config
+MPlayer svn r34540 (Raspbian), built with gcc-4.6 (C) 2000-2012 MPlayer Team
+mplayer: could not connect to socket
+mplayer: No such file or directory
+Failed to open LIRC support. You will not be able to use your remote control.
+
+Playing 99.246.112.101/music/September.ogg.
+File not found: '99.246.112.101/music/September.ogg'
+Failed to open 99.246.112.101/music/September.ogg.
+
+
+Exiting... (End of file)
+pi@raspberrypi ~/GroupCProject $ mplayer http://99.246.112.101/music/September.ogg
+MPlayer svn r34540 (Raspbian), built with gcc-4.6 (C) 2000-2012 MPlayer Team
+mplayer: could not connect to socket
+mplayer: No such file or directory
+Failed to open LIRC support. You will not be able to use your remote control.
+
+Playing http://99.246.112.101/music/September.ogg.
+Connecting to server 99.246.112.101[99.246.112.101]: 80...
+
+Cache size set to 320 KBytes
+Cache fill: 13.62% (44627 bytes)   
+
+
+From https://github.com/marynm/GroupCProject
+ * [new branch]      Documentation -> origin/Documentation
+ * [new branch]      FinalProject -> origin/FinalProject
+Already up-to-date.
+pi@raspberrypi ~/GroupCProject $ cd /home/pi
+pi@raspberrypi ~ $ ls
+Desktop        TrialProject             UnitTest PartyBot3.docx
+GroupCProject  UnitTest PartyBot0.docx  UnitTest PartyBot.docx
+ocr_pi.png     UnitTest PartyBot1.docx
+python_games   UnitTest PartyBot2.docx
+pi@raspberrypi ~ $ cp UnitTest\ PartyBot.docx ./
+cp: `UnitTest PartyBot.docx' and `./UnitTest PartyBot.docx' are the same file
+pi@raspberrypi ~ $ cp UnitTest\ PartyBot.docx ./GroupCProject
+pi@raspberrypi ~ $ cd GroupCProject
+pi@raspberrypi ~/GroupCProject $ git add -A
+pi@raspberrypi ~/GroupCProject $ git commit -m "Test Cases"
+[Trial-Project aaea719] Test Cases
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 UnitTest PartyBot.docx
+pi@raspberrypi ~/GroupCProject $ git push origin FinalProject
+Username for 'https://github.com': preetinigam
+Password for 'https://preetinigam@github.com': 
+error: src refspec FinalProject does not match any.
+error: failed to push some refs to 'https://github.com/marynm/GroupCProject.git'
+pi@raspberrypi ~/GroupCProject $ ls
+monitor.py  README.md  UnitTest PartyBot.docx
+pi@raspberrypi ~/GroupCProject $ git push
+Username for 'https://github.com': preetinigam
+Password for 'https://preetinigam@github.com': 
+Counting objects: 4, done.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 12.69 KiB, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To https://github.com/marynm/GroupCProject.git
+   cd30075..aaea719  Trial-Project -> Trial-Project
+pi@raspberrypi ~/GroupCProject $ ls
+monitor.py  README.md  UnitTest PartyBot.docx
+pi@raspberrypi ~/GroupCProject $ 
