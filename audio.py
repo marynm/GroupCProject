@@ -2,13 +2,13 @@ import os
 import sys
 
 directory = "." #sys.argv[1]
-directoryList = os.listdir(path=directory)
+directoryList = os.listdir(directory)
 
 def play_song(song):
 	
 	if(song in directoryList):
+		os.system('mplayer ' + song)
 		return 'Playing:' + str(song)
-		#os.system('mplayer ' + song)
 	else:
 		return 'Song "' + song + '" does not exist.'
 #while 1:
