@@ -13,5 +13,7 @@ def play_song(song):
 	else:
 		print('Song "' + song + '" does not exist.')
 		return 'Song "' + song + '" does not exist.'
-#while 1:
-	#play_song(input('song pls'))
+
+if __name__ == '__main__':
+	while 1:
+		play_song(input('song pls'))

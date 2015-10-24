@@ -10,14 +10,14 @@ class TestSequenceFunctions(unittest.TestCase):
 		while(i!=8):
 			controller.position_lights(i)
 			i = i + 1
-			sleep(0.1)
+			sleep(0.2)
 		controller.position_lights(0)
-		sleep(0.1)
+		sleep(0.2)
 		i = 7
 		while(i!=-1):
 			controller.position_lights(i)
 			i = i - 1
-			sleep(0.1)
+			sleep(0.2)
 	def test_position_lights_positionDNE(self):
 		#test the light control function with unexpected input value
 		self.assertEqual(controller.position_lights(8), 0)

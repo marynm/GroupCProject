@@ -18,42 +18,70 @@ def button_monitor():
 	while(1):
 		while(x!=1):
 			if(p.digital_read(0)):			#button 0 pressed: move to next postion 'up'
-				sleep(1)
+				sleep(0.5)
 				x = 1
-				postion = position + 1
+				position = position + 1
 				if(position == 8):
 					position = 0		#roll-over
 				position_lights(position)	#update the lights
 				move_bot(position)		#tell bot to move
 
 			elif(p.digital_read(1)):		#button 1 pressed: move to next postion 'down'
-				sleep(1)
+				sleep(0.5)
 				x = 1
-				postion = position - 1	
+				position = position - 1	
 				if(position == -1):
 					position = 7	
 				position_lights(position)	#update the lights
 				move_bot(position)		#tell bot to move
 		
 			elif(p.digital_read(2)):		#button 2 pressed: whatever action this is goign to control (next song?)
-				sleep(1)
+				sleep(0.5)
+				flash_lights()			#flash lights to indicate a button press
+				position_lights(position)	#then return to indicating the position
 				x = 1
 		
 			elif(p.digital_read(3)):		#button 3 pressed: whatever action this is goign to control (fill food?)
-				sleep(1)
+				sleep(0.5)
 				x = 1
+				flash_lights()			#flash lights to indicate a button press
+				position_lights(position)	#then return to indicating the position
 				#move_bot(food_fill_location)
 		x = 0
 			
 
 
 def move_bot(position):
-	#send message to bot telling it which position to go to
+#send message to bot telling it which position to go to
 	print("Moving bot to location " + str(position))
 	return position
 
-def position_lights(position):
+def flash_lights():
+#flash all of the lights on and off once
+	p.digital_write(0,1)
+	p.digital_write(0,1)
+	p.digital_write(1,1)
+	p.digital_write(2,1)
+	p.digital_write(3,1)
+	p.digital_write(4,1)
+	p.digital_write(5,1)
+	p.digital_write(6,1)
+	p.digital_write(7,1)
+
+	sleep(0.2)
+
+	p.digital_write(0,0)
+	p.digital_write(1,0)
+	p.digital_write(2,0)
+	p.digital_write(3,0)
+	p.digital_write(4,0)
+	p.digital_write(5,0)
+	p.digital_write(6,0)
+	p.digital_write(7,0)
 	
+
+def position_lights(position):
+#turn on the light indicating the currently selected position	
 	if(position == 0):
 		p.digital_write(0,1)
 		p.digital_write(1,0)
@@ -130,6 +158,6 @@ def position_lights(position):
 		return 0
 		
 
-
-while(1):
-	button_monitor()
+if __name__ == '__main__':
+	while(1):
+		button_monitor()
