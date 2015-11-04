@@ -1,0 +1,13 @@
+import unittest
+
+from dispense_chips import chipsDispenser
+
+class chipsDispenserTest(unittest.TestCase):
+
+	def test_do_something(self):
+	dispenser = chipsDispenser()
+	chips = dispenser.getSensorAck()
+
+
+if __name__ == "__main__":
+unittest.main() 
