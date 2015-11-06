@@ -72,7 +72,7 @@ def button_monitor():
 def move_bot(position):
 #send message to bot telling it which position to go to
 
-	MESSAGE = bytes(position, "utf-8")
+	MESSAGE = bytes(str(position), "utf-8")
 	conn.send(MESSAGE)
 	
 	if(position != 7):
