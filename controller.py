@@ -24,16 +24,16 @@ def button_monitor():
 				if(position == 8):
 					position = 0		#roll-over
 				position_lights(position)	#update the lights
+				#move_bot(position)		#tell bot to move
+
+			elif(p.digital_read(1)):		#button 1 pressed: confirm current selection
+				sleep(0.5)
+				x = 1	
+				#position_lights(position)	#update the lights
 				move_bot(position)		#tell bot to move
 
-			elif(p.digital_read(1)):		#button 1 pressed: move to next postion 'down'
-				sleep(0.5)
-				x = 1
-				position = position - 1	
-				if(position == -1):
-					position = 7	
-				position_lights(position)	#update the lights
-				move_bot(position)		#tell bot to move
+				if(position == 8)		#if the bot is going to the dispenser, alert the despiensor to activate the sensors
+					alert_dispenser();	
 		
 			elif(p.digital_read(2)):		#button 2 pressed: whatever action this is goign to control (next song?)
 				sleep(0.5)
@@ -53,8 +53,13 @@ def button_monitor():
 
 def move_bot(position):
 #send message to bot telling it which position to go to
+
 	print("Moving bot to location " + str(position))
+
 	return position
+
+def alert_dispenser():
+#send message to the bot telling it that the bot is coming, so that it activates the sensors and is prepaered to dispense
 
 def flash_lights():
 #flash all of the lights on and off once
