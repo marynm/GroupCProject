@@ -24,12 +24,10 @@ def button_monitor():
 				if(position == 8):
 					position = 0		#roll-over
 				position_lights(position)	#update the lights
-				#move_bot(position)		#tell bot to move
 
 			elif(p.digital_read(1)):		#button 1 pressed: confirm current selection
 				sleep(0.5)
 				x = 1	
-				#position_lights(position)	#update the lights
 				move_bot(position)		#tell bot to move
 
 				if(position == 8):		#if the bot is going to the dispenser, alert the despiensor to activate the sensors
