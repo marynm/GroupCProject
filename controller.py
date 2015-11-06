@@ -19,7 +19,6 @@ def button_monitor():
 		while(x!=1):
 			if(p.digital_read(0)):			#button 0 pressed: move to next postion 'up'
 				sleep(0.5)
-				x = 1
 				position = position + 1
 				if(position == 8):
 					position = 0		#roll-over
@@ -35,20 +34,37 @@ def button_monitor():
 
 				#disactivate buttons 0 and 1 until bot has reached location	
 		
-			elif(p.digital_read(2)):		#button 2 pressed: whatever action this is goign to control (next song?)
+			elif(p.digital_read(2)):		#button 2 pressed: Take picture
 				sleep(0.5)
 				flash_lights()			#flash lights to indicate a button press
 				position_lights(position)	#then return to indicating the position
-				x = 1
+				take_picture()
 		
-			elif(p.digital_read(3)):		#button 3 pressed: whatever action this is goign to control (fill food?)
+			elif(p.digital_read(3)):		#button 3 pressed: Change song
 				sleep(0.5)
-				x = 1
 				flash_lights()			#flash lights to indicate a button press
 				position_lights(position)	#then return to indicating the position
-				#move_bot(food_fill_location)
-		x = 0
+				change_song()
+
+		#while the bot is moving buttons 0 and 1 are disactivated until the bot reaches the location
+		while(x ==1):
 			
+			if(p.digital_read(2)):		#button 2 pressed: Take picture
+				sleep(0.5)
+				flash_lights()			#flash lights to indicate a button press
+				position_lights(position)	#then return to indicating the position
+				take_picture()
+		
+			elif(p.digital_read(3)):		#button 3 pressed: Change song
+				sleep(0.5)
+				flash_lights()			#flash lights to indicate a button press
+				position_lights(position)	#then return to indicating the position
+				change_song()
+			if(msg_from_bot() == 1)			#check for message from bot saying that the bot has reached location
+				x = 0
+
+	
+	
 
 
 def move_bot(position):
@@ -61,9 +77,23 @@ def move_bot(position):
 
 	return position
 
+def take_picture():
+#send message to bot telling it to take a picture
+	print("Taking picture");
+
+def change_song():
+#send message to bot telling it to change the song
+	print("Changing song");
+
 def alert_dispenser():
 #send message to the bot telling it that the bot is coming, so that it activates the sensors and is prepaered to dispense
-	printf("alerting dispenser");
+	print("Alerting dispenser")
+
+def int msg_from_bot()
+	#check for message from bot
+
+	#if msg received, return 1
+		return 1
 
 def flash_lights():
 #flash all of the lights on and off once
