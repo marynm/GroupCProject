@@ -131,8 +131,20 @@ main(int argc, char *argv[])
 				pos = ((inputline[1]-0x30)*100) + 
 				      ((inputline[2]-0x30)*10) +
 				      ((inputline[3]-0x30));
+				if(pos == 500){
+					data[0] = 128;
+					data[1] = 131;
+					SendToCreate( fd, data, 2);
+					data[0] = 145;
+					data[1] = 137;
+					data[2] = 0;
+					data[3] = 100;
+					data[4] = 128;
+					data[5] = 0;
+					SendToCreate( fd, data, 6);
+				}
 
-				if( (pos < 60) || (pos > 240) )
+				/*if( (pos < 60) || (pos > 240) )
 				{
 					// send STOP
 		                	data[0] = 128;
@@ -185,7 +197,7 @@ main(int argc, char *argv[])
 				data[5] = 0;
 				data[6] = 0;
 				SendToCreate( fd, data, 7 );
-				printf( "\nstop" );
+				printf( "\nstop" ); */
 			}
 		}
 
