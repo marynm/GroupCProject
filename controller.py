@@ -5,9 +5,10 @@ from time import sleep
 import socket
 
 #initial basic functionality:
-#when the buttons 'left' or 'right' are pressed the lights move to indicate 
-#which of the 8 possible pre-programmed loactions the bot will move to
-#(later this will also send a message to the bot telling it to go to that position)
+#When the button to scroll is pressed the lights move to indicate 
+#which of the 8 possible pre-programmed loactions the bot will move to (one of which is the dispensor)
+#when the select button is pressed
+#The camera button and son botton both send controll messages to the bot, and flash all the lights
 
 
 
@@ -30,8 +31,8 @@ def button_monitor():
 				x = 1	
 				move_bot(position)		#tell bot to move
 
-				if(position == 8):		#if the bot is going to the dispenser, alert the despiensor to activate the sensors
-					alert_dispenser();
+				if(position == 7):		#if the bot is going to the dispenser, alert the despiensor to activate the sensors
+					alert_dispenser()
 
 				#disactivate buttons 0 and 1 until bot has reached location	
 		
@@ -63,10 +64,6 @@ def button_monitor():
 				flash_lights()			#flash lights to indicate a button press
 				position_lights(position)	#then return to indicating the position
 				change_song()
-			
-
-	
-	
 
 
 def move_bot(position):
@@ -101,6 +98,8 @@ def change_song():
 def alert_dispenser():
 #send message to the bot telling it that the bot is coming, so that it activates the sensors and is prepaered to dispense
 	print("Alerting dispenser")
+	MESSAGE = "bot"
+	sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
 
 
 
@@ -217,7 +216,8 @@ def position_lights(position):
 if __name__ == '__main__':
 	p.init()
 
-	#set up connection to server (controller), with controller's IP
+	#set up connection to clients (bot and dispenser), with controller's IP
+	#TCP connection with bot
 	TCP_IP = '10.0.0.32'
 	TCP_PORT = 5005
 	BUFFER_SIZE = 1024
@@ -226,6 +226,12 @@ if __name__ == '__main__':
 	s.listen(1)
 	conn, addr = s.accept()
 	#s.connect((TCP_IP, TCP_PORT))
+	
+	#UDP connection with dispenser
+	UDP_IP = "127.0.0.1"
+	UDP_PORT = 5005
+	sock = socket.socket(socket.AF_INET, # Internet
+                     socket.SOCK_DGRAM) # UDP
 	
 	while(1):
 		button_monitor()
