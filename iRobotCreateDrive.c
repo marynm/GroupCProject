@@ -134,14 +134,12 @@ main(int argc, char *argv[])
 				if(pos == 500){
 					data[0] = 128;
 					data[1] = 131;
-					SendToCreate( fd, data, 2);
-					data[0] = 145;
-					data[1] = 137;
-					data[2] = 0;
-					data[3] = 100;
-					data[4] = 128;
-					data[5] = 0;
-					SendToCreate( fd, data, 6);
+					data[2] = 137;
+					data[3] = 0;
+					data[4] = 100;
+					data[5] = 128;
+					data[6] = 0;
+					SendToCreate( fd, data, 7 );
 				}
 
 				/*if( (pos < 60) || (pos > 240) )
