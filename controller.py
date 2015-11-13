@@ -50,9 +50,11 @@ def button_monitor():
 
 		#while the bot is moving buttons 0 and 1 are disactivated until the bot reaches the location
 		while(x ==1):
-			#data = s.recv(BUFFER_SIZE)		#receive without waiting?? Probable need another thread???
+			#data = conn.recv(BUFFER_SIZE)		#receive without waiting?? Probable need another thread???
 			if(msg_from_bot() == 1):		#check for message from bot saying that the bot has reached location
-				x = 0
+				msg = data.decode("utf-8")
+				if(msg == "at location"):
+					x = 0
 
 			elif(p.digital_read(2)):			#button 2 pressed: Take picture
 				sleep(0.5)

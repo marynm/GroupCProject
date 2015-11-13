@@ -29,13 +29,15 @@ def move_bot(position):
 	
 	#once at position send message to controller indicating it has arrived
 	MESSAGE = bytes("at location", "utf-8")
-	conn.send(MESSAGE)
+	s.send(MESSAGE)
 
 
 def take_picture():
 """take pictures"""
 #fswebcam image.jpg
 	print("Taking picture")
+	
+	#code to take and save picture in a 'Pictures' directory
 	
 
 def play_song(song):
@@ -53,7 +55,7 @@ def next_song():
 	print("Playing next song")
 	#move to next item in the directory list
 	#song = directoryList[i] 	#?????
-	play(song)
+	play_song(song)
 
 
 
@@ -78,10 +80,9 @@ if __name__ == '__main__':
 
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	#s.connect((TCP_IP, TCP_PORT))
-	conn, addr = s.accept()
 	
 	#prepare the list of songs
-	directory = "./Music"
+	directory = "./Music"		#????
 	directoryList = get_files(directory) #os.listdir(directory)
 	
 	while 1:
