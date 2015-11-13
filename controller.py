@@ -50,6 +50,7 @@ def button_monitor():
 
 		#while the bot is moving buttons 0 and 1 are disactivated until the bot reaches the location
 		while(x ==1):
+			#data = s.recv(BUFFER_SIZE)		#receive without waiting?? Probable need another thread???
 			if(msg_from_bot() == 1):		#check for message from bot saying that the bot has reached location
 				x = 0
 
@@ -98,7 +99,7 @@ def change_song():
 def alert_dispenser():
 #send message to the bot telling it that the bot is coming, so that it activates the sensors and is prepaered to dispense
 	print("Alerting dispenser")
-	MESSAGE = "bot"
+	MESSAGE = bytes("dispenser", , "utf-8")
 	sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
 
 

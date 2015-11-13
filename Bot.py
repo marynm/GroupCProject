@@ -5,6 +5,7 @@ import sys
    
 
 def receive_command():
+"""wait for commands from the controller and process them"""
 	while(1):
 		#data = s.recv(BUFFER_SIZE)
 		#command = data.decode("utf-8")
@@ -15,7 +16,7 @@ def receive_command():
 			take_picture()
 	
 		elif (command == "music"):
-			play_next_song()
+			next_song()
 		
 		else:
 			move_bot(command)
@@ -23,20 +24,19 @@ def receive_command():
 
 
 def move_bot(position):
-#move to location and tell controller when reached
+"""move to location and tell controller when reached"""
 	print("Moving bot to position" + position);
+	
+	#once at position send message to controller indicating it has arrived
+	MESSAGE = bytes("at location", "utf-8")
+	conn.send(MESSAGE)
 
 
 def take_picture():
-#take pictures
+"""take pictures"""
 #fswebcam image.jpg
 	print("Taking picture")
-
-def setup_music():
-#change songsprint ("received data:", data.decode("utf-8"))
-
-	directory = "." #sys.argv[1]
-	directoryList = get_files(directory) (#os.listdir(directory)
+	
 
 def play_song(song):
 	
@@ -48,8 +48,12 @@ def play_song(song):
 		print('Song "' + song + '" does not exist.')
 		return 'Song "' + song + '" does not exist.'
 
-def play_next_song():
+
+def next_song():
 	print("Playing next song")
+	#move to next item in the directory list
+	#song = directoryList[i] 	#?????
+	play(song)
 
 
 
@@ -66,10 +70,6 @@ def get_files(dirname):
     return filepaths
 
 
-
-
-
-
 if __name__ == '__main__':
 	#setup TCP connection
 	TCP_IP = '10.0.0.32'
@@ -78,10 +78,14 @@ if __name__ == '__main__':
 
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	#s.connect((TCP_IP, TCP_PORT))
+	conn, addr = s.accept()
+	
+	#prepare the list of songs
+	directory = "./Music"
+	directoryList = get_files(directory) #os.listdir(directory)
 	
 	while 1:
 		receive_command()
-		#play_song(input('song pls'))
 
 
 
