@@ -72,7 +72,7 @@ def move_bot(position):
 #send message to bot telling it which position to go to
 	
 	send_message_to_bot(str(position))
-	
+	sleep(3)
 	if(position != 7):
 		print("Moving bot to location " + str(position))
 	else:
@@ -88,19 +88,16 @@ def take_picture():
 	send_message_to_bot("camera")
 
 
-
 def change_song():
 #send message to bot telling it to change the song
 	print("Changing song");
 	send_message_to_bot("music")
 
-
-
 def alert_dispenser():
-#send message to the bot telling it that the bot is coming, so that it activates the sensors and is prepaered to dispense
+#Alert the deispenser that the bot is coming to that it is prepaered to dispense
 	print("Alerting dispenser")
 	MESSAGE = bytes("dispenser", "utf-8")
-	#sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+	sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
 
 
 def send_message_to_bot(msg):
@@ -156,6 +153,15 @@ def position_lights(position):
 		p.digital_write(4,0)
 		p.digital_write(5,0)
 		p.digital_write(6,0)
+		p.digital_write(6,0)
+		p.digital_write(7,0)
+	elif(position == 1):
+		p.digital_write(0,0)
+		p.digital_write(1,1)
+		p.digital_write(2,0)
+		p.digital_write(3,0)
+		p.digital_write(4,0)
+		p.digital_write(5,0)
 		p.digital_write(6,0)
 		p.digital_write(7,0)
 	elif(position == 2):
@@ -227,10 +233,10 @@ def setup_TCP():
 	s.bind((TCP_IP, TCP_PORT))
 	s.listen(1)
 	conn, addr = s.accept()
-	#s.connect((TCP_IP, TCP_PORT))
+	s.connect((TCP_IP, TCP_PORT))
 
 def setup_UDP():
-	UDP_IP = "127.0.0.1"
+	UDP_IP = "10.0.0.32"
 	UDP_PORT = 5005
 	sock = socket.socket(socket.AF_INET, # Internet
                      socket.SOCK_DGRAM) # UDP
@@ -242,8 +248,12 @@ if __name__ == '__main__':
 	#set up connection to clients (bot and dispenser), with controller's IP
 	#setup_TCP()
 	
-	#UDP connection with dispenser
+	#UDP is used for communication with dispenser
 	#setup_UDP()
+	UDP_IP = "10.0.0.21"
+	UDP_PORT = 5005
+	sock = socket.socket(socket.AF_INET, # Internet
+                     socket.SOCK_DGRAM) # UDP
 	
 	#continually chack for and handle button presses
 	while(1):
