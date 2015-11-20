@@ -1,6 +1,7 @@
 import controller
 import unittest
 from time import sleep
+import pifacedigitalio as p
 
 class TestSequenceFunctions(unittest.TestCase):
 
@@ -8,20 +9,21 @@ class TestSequenceFunctions(unittest.TestCase):
 		#cycle through all the position lights, moving up, roll-over, adn back down
 		i = 0
 		while(i!=8):
-			self.assertEqual(controller.position_lights(i), i)
+			controller.position_lights(i)
 			i = i + 1
 			sleep(0.2)
 		controller.position_lights(0)
 		sleep(0.2)
 		i = 7
 		while(i!=-1):
-			self.assertEqual(controller.position_lights(i), i)
+			controller.position_lights(i)
 			i = i - 1
 			sleep(0.2)
 
 	def test_position_lights_positionDNE(self):
 		#test the light control function with unexpected input value
 		self.assertEqual(controller.position_lights(8), 0)
+		
 
 	def test_flash_lights(self):
 		#test the function that flashes the lights on and off, and the function that reestablishes the position light

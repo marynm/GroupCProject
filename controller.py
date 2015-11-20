@@ -27,6 +27,7 @@ def button_monitor():
 			elif(p.digital_read(1)):		#button 1 pressed: confirm current selection
 				sleep(0.5)
 				flash_lights()			#flash lights to indicate a button press
+				position_lights(position)	#then return to indicating the position
 				x = 1				#disactivate buttons 0 and 1 until bot has reached location
 				move_bot(position)		#tell bot to move to the selected location
 
@@ -49,8 +50,8 @@ def button_monitor():
 		while(x ==1):
 
 			if(msg_from_bot() == 1):		#check for message from bot saying that the bot has reached location
-				msg = data.decode("utf-8")
-				if(msg == "at location"):
+				#msg = data.decode("utf-8")
+				#if(msg == "at location"):
 					x = 0
 
 			elif(p.digital_read(2)):			#button 2 pressed: Take picture
@@ -99,7 +100,7 @@ def alert_dispenser():
 #send message to the bot telling it that the bot is coming, so that it activates the sensors and is prepaered to dispense
 	print("Alerting dispenser")
 	MESSAGE = bytes("dispenser", "utf-8")
-	sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
+	#sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
 
 
 def send_message_to_bot(msg):
@@ -121,6 +122,7 @@ def msg_from_bot():
 
 def flash_lights():
 #flash all of the lights on and off once
+	p.init()
 	p.digital_write(0,1)
 	p.digital_write(0,1)
 	p.digital_write(1,1)
@@ -145,6 +147,7 @@ def flash_lights():
 
 def position_lights(position):
 #turn on the light indicating the currently selected position	
+	p.init()
 	if(position == 0):
 		p.digital_write(0,1)
 		p.digital_write(1,0)
@@ -153,14 +156,6 @@ def position_lights(position):
 		p.digital_write(4,0)
 		p.digital_write(5,0)
 		p.digital_write(6,0)
-		p.digital_write(7,0)
-	elif(position == 1):
-		p.digital_write(0,0)
-		p.digital_write(1,1)
-		p.digital_write(2,0)
-		p.digital_write(3,0)
-		p.digital_write(4,0)
-		p.digital_write(5,0)
 		p.digital_write(6,0)
 		p.digital_write(7,0)
 	elif(position == 2):
@@ -245,10 +240,10 @@ if __name__ == '__main__':
 	p.init()
 
 	#set up connection to clients (bot and dispenser), with controller's IP
-	setup_TCP()
+	#setup_TCP()
 	
 	#UDP connection with dispenser
-	setup_UDP()
+	#setup_UDP()
 	
 	#continually chack for and handle button presses
 	while(1):
