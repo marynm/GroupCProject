@@ -16,55 +16,35 @@ def button_monitor():
 	msg_received = 0
 
 	while(1):
-		while(x!=1):
-			if(p.digital_read(0)):			#button 0 pressed: move to next postion 'up'
-				sleep(0.5)
-				position = position + 1
-				if(position == 8):		#check for roll-over
-					position = 0
-				position_lights(position)	#update the lights
+		if(p.digital_read(0)):			#button 0 pressed: move to next postion 'up'
+			sleep(0.5)
+			position = position + 1
+			if(position == 8):		#check for roll-over
+				position = 0
+			position_lights(position)	#update the lights
 
-			elif(p.digital_read(1)):		#button 1 pressed: confirm current selection
-				sleep(0.5)
+		elif(p.digital_read(1)):		#button 1 pressed: confirm current selection
+			sleep(0.5)
+			move_bot(position)		#tell bot to move to the selected location
+			if(check_bot_done()):			#while the bot is still carrying out the previous move command it can't take the new position request
 				flash_lights()			#flash lights to indicate a button press
 				position_lights(position)	#then return to indicating the position
-				x = 1				#disactivate buttons 0 and 1 until bot has reached location
-				move_bot(position)		#tell bot to move to the selected location
 
-				if(position == 7):		#if the bot is going to the dispenser, alert the despiensor to expect the bot
-					alert_dispenser()	
+			if(position == 7):		#if the bot is going to the dispenser, alert the despiensor to expect the bot
+				alert_dispenser()	
 		
-			elif(p.digital_read(2)):		#button 2 pressed: Take picture
-				sleep(0.5)
-				flash_lights()			#flash lights to indicate a button press
-				position_lights(position)	#then return to indicating the position
-				take_picture()
+		elif(p.digital_read(2)):		#button 2 pressed: Take picture
+			sleep(0.5)
+			flash_lights()			#flash lights to indicate a button press
+			position_lights(position)	#then return to indicating the position
+			take_picture()
 		
-			elif(p.digital_read(3)):		#button 3 pressed: Change song
-				sleep(0.5)
-				flash_lights()			#flash lights to indicate a button press
-				position_lights(position)	#then return to indicating the position
-				change_song()
+		elif(p.digital_read(3)):		#button 3 pressed: Change song
+			sleep(0.5)
+			flash_lights()			#flash lights to indicate a button press
+			position_lights(position)	#then return to indicating the position
+			change_song()
 
-		#while the bot is moving buttons 0 and 1 are disactivated until the bot reaches the location
-		while(x ==1):
-
-			if(msg_from_bot() == 1):		#check for message from bot saying that the bot has reached location
-				#msg = data.decode("utf-8")
-				#if(msg == "at location"):
-					x = 0
-
-			elif(p.digital_read(2)):			#button 2 pressed: Take picture
-				sleep(0.5)
-				flash_lights()			#flash lights to indicate a button press
-				position_lights(position)	#then return to indicating the position
-				take_picture()
-		
-			elif(p.digital_read(3)):		#button 3 pressed: Change song
-				sleep(0.5)
-				flash_lights()			#flash lights to indicate a button press
-				position_lights(position)	#then return to indicating the position
-				change_song()
 
 
 
@@ -104,16 +84,17 @@ def send_message_to_bot(msg):
 #convert the passed message string to bytes and send the message to the bot
 	print("Sending message '" + msg + "' to bot.")
 	MESSAGE = bytes(msg, "utf-8")
-	#conn.send(MESSAGE)		#-> commented out for testing functions independently (without message connections set up)
+	conn.send(MESSAGE)		#-> comment out for testing functions independently (without message connections set up)
 
 
-def msg_from_bot():
-	#check for message from bot -> function not yet written
-	#data = conn.recv(BUFFER_SIZE)		#receive without waiting?? Probably need another thread??? -> in progress, need to learn more
-	
-	#if msg received, return 1
+def check_bot_done():
+	#check if bot is still carrying out the last command
+	data = conn.recv(BUFFER_SIZE)
+	msg = data.decode("utf-8")
+	if(msg == "done"):
 		return 1
-	#else return 0
+	else:
+		return 0
 
 
 
@@ -223,30 +204,21 @@ def position_lights(position):
 	
 	return position
 
-		
-def setup_TCP():
-	#TCP connection with bot
-	TCP_IP = '10.0.0.32'
-	TCP_PORT = 5005
-	BUFFER_SIZE = 1024
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.bind((TCP_IP, TCP_PORT))
-	s.listen(1)
-	conn, addr = s.accept()
-	s.connect((TCP_IP, TCP_PORT))
-
-def setup_UDP():
-	UDP_IP = "10.0.0.32"
-	UDP_PORT = 5005
-	sock = socket.socket(socket.AF_INET, # Internet
-                     socket.SOCK_DGRAM) # UDP
-
 
 if __name__ == '__main__':
 	p.init()
 
 	#set up connection to clients (bot and dispenser), with controller's IP
-	#setup_TCP()
+	#TCP connection with bot
+	TCP_IP = '10.0.0.32'
+	TCP_PORT = 5002
+	BUFFER_SIZE = 1024
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.bind((TCP_IP, TCP_PORT))
+	s.listen(1)
+	conn, addr = s.accept()
+
+	print("TCP connection set up")
 	
 	#UDP is used for communication with dispenser
 	#setup_UDP()
@@ -256,7 +228,11 @@ if __name__ == '__main__':
                      socket.SOCK_DGRAM) # UDP
 	
 	#continually chack for and handle button presses
-	while(1):
-		button_monitor()
+	try:	
+		while(1):
+			button_monitor()
+
+	except KeyboardInterrupt:
+		conn.close()
 
 
