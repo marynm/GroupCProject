@@ -13,7 +13,7 @@ int main()
 void takePicture()
 {
     char out[BUFSIZ];
-    sprintf(out,"fswebcam -r 1280x720 --no-banner image%i.jpg",pic_num);
+    sprintf(out,"fswebcam -r 1280x720 --no-banner ./pictures/image%i.jpg",pic_num);
     system(out);
     pic_num++;
 }
