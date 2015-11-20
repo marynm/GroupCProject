@@ -106,10 +106,10 @@ main(int argc, char *argv[])
 	while( 1 )
 	{
 		stoptimer++;
-		if( stoptimer >= 2 )
+		/*if( stoptimer >= 2 )
 		{
 			// send STOP
-            data[0] = 128;
+            		data[0] = 128;
 			data[1] = 131;
 			data[2] = 145;
 			data[3] = 0;
@@ -117,7 +117,7 @@ main(int argc, char *argv[])
 			data[5] = 0;
 			data[6] = 0;
 			SendToCreate( fd, data, 7 );
-		}
+		}*/
 		usleep( 250000 );
 		//printf( "\nWaiting" );
 		result = fgets( inputline, 256, stdin );
