@@ -142,7 +142,7 @@ main(int argc, char *argv[])
 					SendToCreate( fd, data, 7 );
 				}
 
-				/*if( (pos < 60) || (pos > 240) )
+				if(pos == 777)
 				{
 					// send STOP
 		                	data[0] = 128;
@@ -156,7 +156,7 @@ main(int argc, char *argv[])
 					continue;
 				}
 
-				if( pos < 140)
+				if( pos == 420)
 				{
 					// turn left
                 			data[0] = 128;
@@ -171,7 +171,7 @@ main(int argc, char *argv[])
 					continue;
 				}
 
-				if( pos > 170 )
+				if( pos == 666 )
 				{
 					// trun right
                 			data[0] = 128;
@@ -184,7 +184,7 @@ main(int argc, char *argv[])
 					SendToCreate( fd, data, 7 );
 					printf( "\nright" );
 					continue;
-				}
+				}/*
 
 				// stop
 	                	data[0] = 128;
