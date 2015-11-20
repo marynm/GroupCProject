@@ -98,13 +98,13 @@ def change_song():
 def alert_dispenser():
 #send message to the bot telling it that the bot is coming, so that it activates the sensors and is prepaered to dispense
 	print("Alerting dispenser")
-	MESSAGE = bytes("dispenser", , "utf-8")
+	MESSAGE = bytes("dispenser", "utf-8")
 	sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
 
 
-def send_message_to_bot(msg)
+def send_message_to_bot(msg):
 #convert the passed message string to bytes and send the message to the bot
-	print("Sending message " + msg + " to bot.")
+	print("Sending message '" + msg + "' to bot.")
 	MESSAGE = bytes(msg, "utf-8")
 	#conn.send(MESSAGE)		#-> commented out for testing functions independently (without message connections set up)
 
