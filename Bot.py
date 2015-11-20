@@ -7,10 +7,10 @@ import sys
 def receive_command():
 #wait for commands from the controller and process them
 	while(1):
-		print("test1")
 		data = s.recv(BUFFER_SIZE)
-		print("test2")
 		if(data):
+			msg = bytes("done", "utf-8")
+			s.send(msg)
 			command = data.decode("utf-8")
 			print("received data:", command)
 
