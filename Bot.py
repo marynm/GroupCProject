@@ -41,7 +41,7 @@ def take_picture():
 	
 	#code to take and save picture in a 'Pictures' directory
 	
-
+#code to play song from directory list
 def play_song(song):
 	
 	if(song in directoryList):
@@ -87,8 +87,8 @@ if __name__ == '__main__':
 	#directory = "./Music"		#????
 	#directoryList = get_files(directory) #os.listdir(directory)
 	
-	while 1:
-		receive_command()
+	#while 1:
+		#receive_command()
 
 
 
