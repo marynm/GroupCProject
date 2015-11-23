@@ -10,6 +10,7 @@ class HardwareInterface(threading.Thread):
 def Dispense(self):
 	#check if dispenser turns movs from initial position
 		dispenseMotor.dispense()
+		printf("Working")
 		
 
 
