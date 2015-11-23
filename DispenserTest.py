@@ -22,4 +22,8 @@ def Dispense(self):
 		cb()
 
 
-
+#test clsoing of the dispenser door then reclosing it
+		open= p.ChangeDutyCycle
+		time.sleep(1)
+		close=p.ChangeDutyCycle
+		printf("The dispenser door is closed")
