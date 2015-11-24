@@ -1,38 +1,21 @@
 //---------------------------------------------------------------------------
-//	iRobot Create Control Application
-//	Written by Eric Gregori ( www.EMGRobotics.com )
-//
-//    Copyright (C) 2009  Eric Gregori
-//
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
-//
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-// This is a Linux application for controlling the iRobot Create from a command line, or 
-// linux STDIO pipe.  To use, simply pipe the output or your application into this application.
-// sudo ./glview | iRobotCreateDrive
-//
+//	iRobot Create Control Application.
+// 	-Used to demonstrate and show the iRobot's functionality
+//	-The code used will be vital to final Bot code
 //
 //---------------------------------------------------------------------------
-#include <termios.h>					// tcgetattr(), 
-#include <unistd.h>						// tcgetattr(), 
+#include <termios.h>					// tcgetattr(),
+#include <unistd.h>						// tcgetattr(),
 #include <stdio.h>
 #include <errno.h>
 #include <sys/file.h>
 
+//Setting up the iRobot serial communication
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
 
 
+//A function to physically send the data to the Bot
 void SendToCreate( int fd, char *data, int length )
 {
 	int i;
@@ -58,10 +41,10 @@ main(int argc, char *argv[])
 	char	data[256];
 	char	*result;
 	int 	flags = fcntl(STDIN_FILENO, F_GETFL);
-		
+
 
 	printf( "\niRobot Create Control Application by Eric Gregori" );
-		
+
 	printf( "\nOpeneing serial port: %s", SERPORT );
 	fd = open(SERPORT, O_RDWR);      			//open the serial port
 
@@ -102,22 +85,8 @@ main(int argc, char *argv[])
 		printf( "\ntcsetattr successfull" );
 
 	fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
-	stoptimer = 0;
 	while( 1 )
 	{
-		stoptimer++;
-		/*if( stoptimer >= 2 )
-		{
-			// send STOP
-            		data[0] = 128;
-			data[1] = 131;
-			data[2] = 145;
-			data[3] = 0;
-			data[4] = 0;
-			data[5] = 0;
-			data[6] = 0;
-			SendToCreate( fd, data, 7 );
-		}*/
 		usleep( 250000 );
 		//printf( "\nWaiting" );
 		result = fgets( inputline, 256, stdin );
@@ -128,10 +97,12 @@ main(int argc, char *argv[])
 			stoptimer = 0;
 			if( isdigit( inputline[1] ) && isdigit( inputline[2] ) && isdigit( inputline[3] ) )
 			{
-				pos = ((inputline[1]-0x30)*100) + 
+				pos = ((inputline[1]-0x30)*100) +
 				      ((inputline[2]-0x30)*10) +
 				      ((inputline[3]-0x30));
-				if(pos == 500){
+
+				//Go Forward
+				if(pos == 001){
 					data[0] = 128;
 					data[1] = 131;
 					data[2] = 137;
@@ -142,10 +113,10 @@ main(int argc, char *argv[])
 					SendToCreate( fd, data, 7 );
 				}
 
-				if(pos == 777)
+				if(pos == 002)
 				{
 					// send STOP
-		                	data[0] = 128;
+		      data[0] = 128;
 					data[1] = 131;
 					data[2] = 145;
 					data[3] = 0;
@@ -156,10 +127,10 @@ main(int argc, char *argv[])
 					continue;
 				}
 
-				if( pos == 420)
+				if( pos == 003)
 				{
 					// turn left
-                			data[0] = 128;
+          data[0] = 128;
 					data[1] = 131;
 					data[2] = 145;
 					data[3] = 0;
@@ -171,10 +142,10 @@ main(int argc, char *argv[])
 					continue;
 				}
 
-				if( pos == 666 )
+				if( pos == 004)
 				{
-					// trun right
-                			data[0] = 128;
+					// turn right
+          data[0] = 128;
 					data[1] = 131;
 					data[2] = 145;
 					data[3] = 255;
@@ -184,18 +155,7 @@ main(int argc, char *argv[])
 					SendToCreate( fd, data, 7 );
 					printf( "\nright" );
 					continue;
-				}/*
-
-				// stop
-	                	data[0] = 128;
-				data[1] = 131;
-				data[2] = 145;
-				data[3] = 0;
-				data[4] = 0;
-				data[5] = 0;
-				data[6] = 0;
-				SendToCreate( fd, data, 7 );
-				printf( "\nstop" ); */
+				}
 			}
 		}
 
@@ -203,6 +163,3 @@ main(int argc, char *argv[])
 
 	close( fd );
 }
-
-
-	
