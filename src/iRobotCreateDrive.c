@@ -22,7 +22,7 @@ void SendToCreate( int fd, char *data, int length )
 
 	for( i=0; i<length; i++ )
 	{
-		if( write(fd, &data[i], 1) == -1 )
+		if( read(fd, &data[i], 1) == -1 )
 		{
   			printf( "\nUnable to write %s", SERPORT );
 			printf( "\nerrno = %d", errno );
@@ -32,10 +32,27 @@ void SendToCreate( int fd, char *data, int length )
 }
 
 
+void ReadFromCreate( int fd)
+{
+	int i;
+	char data1 [500]
+
+	for( i=0; i<500; i++ )
+	{
+		if( write(fd, &data[i], 1) == -1 )
+		{
+  			printf( "\nUnable to write %s", SERPORT );
+			printf( "\nerrno = %d", errno );
+		}
+		printf("%d", data[i])
+		usleep( 5000 );
+	}
+}
+
 
 main(int argc, char *argv[])
 {
-	int	fd, i, ch, stoptimer, pos;
+	int	fd, i, x, ch, stoptimer, pos;
 	struct 	termios tty;
 	char    inputline[256];
 	char	data[256];
@@ -155,6 +172,12 @@ main(int argc, char *argv[])
 					SendToCreate( fd, data, 7 );
 					printf( "\nright" );
 					continue;
+				}
+				for( x=0; x<30; x++ )
+				{
+					ReadFromCreate(fd);
+					sleep(1);
+				}
 				}
 			}
 		}
