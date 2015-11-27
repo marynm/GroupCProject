@@ -27,7 +27,7 @@ def button_monitor():
 				flash_lights()	
 				position_lights(position)
 
-				if(position == 7):		#NOTE -> this is going to change: will instead alert the dispenser once the bot has reached it
+				if(position == 7):		#if the bot has reached the dispenser, send message to the dispenser causeing it to dispense
 					alert_dispenser()	
 		
 		elif(p.digital_read(2)):		#button 2 pressed: Take picture
@@ -80,7 +80,7 @@ def send_message_to_bot(msg):
 def bot_done():
 	#receive a message from the bot to check if bot is still carrying out the last command
 	send_message_to_bot("done?")
-	data = conn.recv(BUFFER_SIZE)
+	data = conn.recv(BUFFER_SIZE)	#receive response from bot
 	msg = data.decode("utf-8")
 	if(msg == "done"):
 		return 1
