@@ -1,28 +1,20 @@
-//---------------------------------------------------------------------------
-//	iRobot Create Control Application.
-// 	-Used to demonstrate and show the iRobot's functionality
-//	-The code used will be vital to final Bot code
-//
-//---------------------------------------------------------------------------
 #include <termios.h>					// tcgetattr(),
 #include <unistd.h>						// tcgetattr(),
 #include <stdio.h>
 #include <errno.h>
 #include <sys/file.h>
 
-//Setting up the iRobot serial communication
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
 
 
-//A function to physically send the data to the Bot
 void SendToCreate( int fd, char *data, int length )
 {
 	int i;
 
 	for( i=0; i<length; i++ )
 	{
-		if( read(fd, &data[i], 1) == -1 )
+		if( write(fd, &data[i], 1) == -1 )
 		{
   			printf( "\nUnable to write %s", SERPORT );
 			printf( "\nerrno = %d", errno );
@@ -30,7 +22,6 @@ void SendToCreate( int fd, char *data, int length )
 		usleep( 5000 );
 	}
 }
-
 
 void ReadFromCreate( int fd)
 {
@@ -48,6 +39,7 @@ void ReadFromCreate( int fd)
 		usleep( 5000 );
 	}
 }
+
 
 
 main(int argc, char *argv[])
@@ -103,8 +95,22 @@ main(int argc, char *argv[])
 		printf( "\ntcsetattr successfull" );
 
 	fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
+	stoptimer = 0;
 	while( 1 )
 	{
+		stoptimer++;
+		/*if( stoptimer >= 2 )
+		{
+			// send STOP
+            		data[0] = 128;
+			data[1] = 131;
+			data[2] = 145;
+			data[3] = 0;
+			data[4] = 0;
+			data[5] = 0;
+			data[6] = 0;
+			SendToCreate( fd, data, 7 );
+		}*/
 		usleep( 250000 );
 		//printf( "\nWaiting" );
 		result = fgets( inputline, 256, stdin );
@@ -118,10 +124,7 @@ main(int argc, char *argv[])
 				pos = ((inputline[1]-0x30)*100) +
 				      ((inputline[2]-0x30)*10) +
 				      ((inputline[3]-0x30));
-
-				//Go Forward
-				printf( "\ntest1" );
-				if(pos == 001){
+				if(pos == 500){
 					data[0] = 128;
 					data[1] = 131;
 					data[2] = 137;
@@ -132,10 +135,10 @@ main(int argc, char *argv[])
 					SendToCreate( fd, data, 7 );
 				}
 
-				if(pos == 002)
+				if(pos == 777)
 				{
 					// send STOP
-		      data[0] = 128;
+		                	data[0] = 128;
 					data[1] = 131;
 					data[2] = 145;
 					data[3] = 0;
@@ -146,10 +149,10 @@ main(int argc, char *argv[])
 					continue;
 				}
 
-				if( pos == 003)
+				if( pos == 420)
 				{
 					// turn left
-          data[0] = 128;
+                			data[0] = 128;
 					data[1] = 131;
 					data[2] = 145;
 					data[3] = 0;
@@ -161,10 +164,10 @@ main(int argc, char *argv[])
 					continue;
 				}
 
-				if( pos == 004)
+				if( pos == 666 )
 				{
-					// turn right
-          data[0] = 128;
+					// trun right
+                			data[0] = 128;
 					data[1] = 131;
 					data[2] = 145;
 					data[3] = 255;
@@ -180,6 +183,19 @@ main(int argc, char *argv[])
 					ReadFromCreate(fd);
 					sleep(1);
 				}
+
+				/*
+
+				// stop
+	                	data[0] = 128;
+				data[1] = 131;
+				data[2] = 145;
+				data[3] = 0;
+				data[4] = 0;
+				data[5] = 0;
+				data[6] = 0;
+				SendToCreate( fd, data, 7 );
+				printf( "\nstop" ); */
 			}
 		}
 
