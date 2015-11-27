@@ -124,7 +124,7 @@ main(int argc, char *argv[])
 				pos = ((inputline[1]-0x30)*100) +
 				      ((inputline[2]-0x30)*10) +
 				      ((inputline[3]-0x30));
-				printf("\ntest5")
+				printf("\ntest5");
 				if(pos == 500){
 					data[0] = 128;
 					data[1] = 131;
