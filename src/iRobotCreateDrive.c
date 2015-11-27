@@ -27,7 +27,7 @@ void ReadFromCreate( int fd)
 {
 	int i;
 	char data1 [500];
-	printf("test1");
+	printf("\ntest1");
 	for( i=0; i<500; i++ )
 	{
 		if( read(fd, &data1[i], 1) == -1 )
@@ -124,6 +124,7 @@ main(int argc, char *argv[])
 				pos = ((inputline[1]-0x30)*100) +
 				      ((inputline[2]-0x30)*10) +
 				      ((inputline[3]-0x30));
+				printf("\ntest5")
 				if(pos == 500){
 					data[0] = 128;
 					data[1] = 131;
@@ -133,7 +134,7 @@ main(int argc, char *argv[])
 					data[5] = 128;
 					data[6] = 0;
 					SendToCreate( fd, data, 7 );
-					printf("test2");
+					printf("\ntest2");
 				}
 
 				if(pos == 777)
@@ -179,10 +180,10 @@ main(int argc, char *argv[])
 					printf( "\nright" );
 					continue;
 				}
-				printf("test3");
+				printf("\ntest3");
 				for( x=0; x<30; x++ )
 				{
-					printf("test4");
+					printf("\ntest4");
 					ReadFromCreate( fd );
 					sleep(1);
 				}
