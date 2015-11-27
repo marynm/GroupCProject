@@ -1,41 +1,39 @@
 import socket
-import os
+import RPi.GPIO as GPIO
+import time
 
-			
-			
-			
-			
-			
-def activate_dispensor():
-#activates the sensor to wait for bot to arrive
-	print("Activating dispensor...waiting for bot")
-	
-	#turn on sensor
-	
-	
-	#monitor sensor, waiting for bot to arrive
-		
-	#when sensor activated, turn motor to open dispenser
-		
-	#turn motor to close dispenser after x seconds
-		
-	#disactivate sensor
-		
-		
-		
+
+
+def dispense():
+#open the dispenser door for 3 seconds, then reclose it
+		p.ChangeDutyCycle(5)
+		time.sleep(3)
+		p.ChangeDutyCycle(12.5)
+
 if __name__ == '__main__':
 	#prepare to receive UPD messages from controller
-	UDP_IP = "10.0.0.20"
-	UDP_PORT = 5004
-	sock = socket.socket(socket.AF_INET, # Internet
-    socket.SOCK_DGRAM) # UDP
+	UDP_IP = "10.0.0.21"
+	UDP_PORT = 5005
+	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM) # UDP
 	sock.bind((UDP_IP, UDP_PORT))
 
-	#wait for messages from cotroller tell the dispensor that the bot is coming#FFFFFF
-	while(1):
-      data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
-	  data = data.decode("utf-8")
-	  if (data == "dispenser"):
-			activate_dispensor()		
+
+	#prepare stepper motor, starting it in closed position
+	GPIO.setmode(GPIO.BOARD)
+	GPIO.setup(7, GPIO.OUT)
+	p = GPIO.PWM(7,50)
+	p.start(12.5)
+
+
+	try:
+		#wait for messages from cotroller and operate dispenser when prompted
+		while True:
+			data, addr = sock.recvfrom(1024) # buffer size is 1024 bytes
+			print( "received message:" + data.decode("utf-8"))
+			dispense()
+
+	except KeyboardInterrupt:
+		p.stop()
 	
+		GPIO.cleanup()
 
