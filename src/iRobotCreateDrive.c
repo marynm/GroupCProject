@@ -31,7 +31,7 @@
 
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
-int fd, i, ch, stoptimer, pos;
+int fd, i, ch, stoptimer, pos, cur_x, cur_y;
 char data[256];
 
 void SendToCreate( int fd, char *data, int length )
@@ -101,7 +101,7 @@ main(int argc, char *argv[])
 	char    inputline[256];
 	char	*result;
 	int 	flags = fcntl(STDIN_FILENO, F_GETFL);
-		
+	int	pos1_x, pos1_y, pos2_x, pos2_y;
 
 	printf( "\niRobot Create Control Application by Eric Gregori" );
 		
@@ -146,6 +146,16 @@ main(int argc, char *argv[])
 
 	fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
 	stoptimer = 0;
+
+
+	//Define coordinates
+	cur_x = 0;
+	cur_y = 0;
+	pos1_x = 1200;
+	pos1_y = 1000;
+	pos2_x = 1600;
+	pos2_y = 700;
+
 	while( 1 )
 	{
 		stoptimer++;
@@ -178,6 +188,27 @@ main(int argc, char *argv[])
 				{
 				    goForward(300);
 				    continue;
+				}
+
+				if(pos == 001)
+				{
+				    if (cur_x < pos1_x)
+				    {
+					if(cur_y < pos1_y)
+					{
+					    if((pos1_y - cur_y) < (pos1_x - cur_x))
+					    {
+						//Upper Right Diagonal until hit pos1_y
+					    }
+					    else
+					    {
+						//Upper Right Diagonal until hit pos1_x
+					    }
+					}
+					else
+					{
+					}
+				    }
 				}
 
 				if(pos == 777)
