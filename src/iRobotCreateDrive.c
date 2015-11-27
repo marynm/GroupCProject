@@ -185,6 +185,7 @@ main(int argc, char *argv[])
 				{
 					printf("\ntest4");
 					ReadFromCreate( fd );
+					printf("\ntest6");
 					sleep(1);
 				}
 
