@@ -39,12 +39,12 @@ void ReadFromCreate( int fd)
 
 	for( i=0; i<500; i++ )
 	{
-		if( write(fd, &data[i], 1) == -1 )
+		if( read(fd, &data1[i], 1) == -1 )
 		{
-  			printf( "\nUnable to write %s", SERPORT );
+  			printf( "\nUnable to read %s", SERPORT );
 			printf( "\nerrno = %d", errno );
 		}
-		printf("%d", data[i])
+		printf("%d", data1[i]);
 		usleep( 5000 );
 	}
 }
@@ -177,7 +177,6 @@ main(int argc, char *argv[])
 				{
 					ReadFromCreate(fd);
 					sleep(1);
-				}
 				}
 			}
 		}
