@@ -17,14 +17,14 @@
 //    You should have received a copy of the GNU General Public License
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-// This is a Linux application for controlling the iRobot Create from a command line, or 
+// This is a Linux application for controlling the iRobot Create from a command line, or
 // linux STDIO pipe.  To use, simply pipe the output or your application into this application.
 // sudo ./glview | iRobotCreateDrive
 //
 //
 //---------------------------------------------------------------------------
-#include <termios.h>					// tcgetattr(), 
-#include <unistd.h>						// tcgetattr(), 
+#include <termios.h>					// tcgetattr(),
+#include <unistd.h>						// tcgetattr(),
 #include <stdio.h>
 #include <errno.h>
 #include <sys/file.h>
@@ -65,7 +65,7 @@ void goLeft(int deg)
 }
 
 void goRight(int deg)
-{   
+{
     data[0] = 128;
     data[1] = 131;
     data[2] = 145;
@@ -104,7 +104,7 @@ main(int argc, char *argv[])
 	int	pos1_x, pos1_y, pos2_x, pos2_y;
 
 	printf( "\niRobot Create Control Application by Eric Gregori" );
-		
+
 	printf( "\nOpeneing serial port: %s", SERPORT );
 	fd = open(SERPORT, O_RDWR);      			//open the serial port
 
@@ -181,7 +181,7 @@ main(int argc, char *argv[])
 			stoptimer = 0;
 			if( isdigit( inputline[1] ) && isdigit( inputline[2] ) && isdigit( inputline[3] ) )
 			{
-				pos = ((inputline[1]-0x30)*100) + 
+				pos = ((inputline[1]-0x30)*100) +
 				      ((inputline[2]-0x30)*10) +
 				      ((inputline[3]-0x30));
 				if(pos == 500)
@@ -190,26 +190,42 @@ main(int argc, char *argv[])
 				    continue;
 				}
 
+				//Needs to become it's own function
 				if(pos == 001)
 				{
-				    if (cur_x < pos1_x)
-				    {
-					if(cur_y < pos1_y)
-					{
-					    if((pos1_y - cur_y) < (pos1_x - cur_x))
-					    {
-						//Upper Right Diagonal until hit pos1_y
-					    }
-					    else
-					    {
-						//Upper Right Diagonal until hit pos1_x
-					    }
-					}
+
+				  if (cur_x < pos1_x)
+				  {
+						if(cur_y < pos1_y)
+						{
+					    //Upper Right
+							//Find Hypotenuse c=sqrt((pos1_x-cur_x) ^2 + (pos1_y-cur_y) ^2)
+							//Find Angle
+						}
+						else
+						{
+							//Lower Right
+							//Find Hypotenuse c=sqrt((pos1_x-cur_x) ^2 + (cur_y-pos1_y) ^2)
+							//Find Angle
+						}
+				  }
+
 					else
-					{
-					}
-				    }
-				}
+				  {
+						if(cur_y < pos1_y)
+						{
+					    //Upper Left
+							//Find Hypotenuse c=sqrt((cur_x-pos1_x) ^2 + (pos1_y-cur_y) ^2)
+							//Find Angle
+						}
+						else
+						{
+							//Lower Left
+							//Find Hypotenuse c=sqrt((cur_x-pos1_x) ^2 + (cur_y-pos_y) ^2)
+							//Find Angle
+						}
+				  }
+				} //Full mover
 
 				if(pos == 777)
 				{
@@ -258,6 +274,3 @@ main(int argc, char *argv[])
 
 	close( fd );
 }
-
-
-	
