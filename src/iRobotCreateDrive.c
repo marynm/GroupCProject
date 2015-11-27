@@ -27,7 +27,7 @@ void ReadFromCreate( int fd)
 {
 	int i;
 	char data1 [500];
-
+	printf("test1");
 	for( i=0; i<500; i++ )
 	{
 		if( read(fd, &data1[i], 1) == -1 )
