@@ -34,7 +34,8 @@ void ReadFromCreate( int fd)
 		printf("\ntest9\n");
 		if( read(fd, &data1[i], 1) == -1 )
 		{
-  			printf( "\nUnable to read %s", SERPORT );
+			printf("\ntest13\n");
+  		printf( "\nUnable to read %s", SERPORT );
 			printf( "\nerrno = %d", errno );
 			printf("\ntest12\n");
 		}
