@@ -35,7 +35,7 @@ void SendToCreate( int fd, char *data, int length )
 void ReadFromCreate( int fd)
 {
 	int i;
-	char data1 [500]
+	char data1 [500];
 
 	for( i=0; i<500; i++ )
 	{
@@ -56,6 +56,7 @@ main(int argc, char *argv[])
 	struct 	termios tty;
 	char    inputline[256];
 	char	data[256];
+	char	data1[500];
 	char	*result;
 	int 	flags = fcntl(STDIN_FILENO, F_GETFL);
 
