@@ -11,7 +11,30 @@ char out[BUFSIZ];
 
 int main()
 {
-    takePicture();
+   char* message;
+   int location;
+
+   init_music();
+
+   //start thread that contiually cycles bot through locations
+
+   //start thread that continually takes pictures at intervals
+
+
+   //main thread waits for messages from bot
+   while(1)
+   {
+	//receive message from controller
+	
+	if(strcmp(message, "camera"))
+		takePicture();
+	else if(strcmp(message, "music"))
+		nextSong();
+	else
+		//position = atoi(message)
+		moveBot(location);
+
+   }
     return 0;
 }
 
@@ -22,6 +45,13 @@ void takePicture()
     //system will execute linux command created above
     system(out);
     pic_num++;
+}
+
+void nextSong()
+{
+	song_num++;
+	//****
+
 }
 
 char** init_music()
@@ -48,4 +78,16 @@ char** init_music()
 	cur_song++;
     }
     return song_list;
+}
+
+void moveBot(int location)
+{
+
+	//make bot move to location
+
+	//when reached location send message back to controller
+
+	//then resume regular autonomous movement cycle unless it is at the dispensor, then wait for a few seconds for food to dispense
+
+
 }
