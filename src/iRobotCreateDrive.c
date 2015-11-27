@@ -31,14 +31,19 @@ void ReadFromCreate( int fd)
 	printf("\ntest1\n");
 	for( i=0; i<500; i++ )
 	{
+		printf("\ntest9\n");
 		if( read(fd, &data1[i], 1) == -1 )
 		{
   			printf( "\nUnable to read %s", SERPORT );
 			printf( "\nerrno = %d", errno );
+			printf("\ntest12\n");
 		}
-		printf("\n%d", data1[i]);
+		printf("\ntest10\n");
+		printf("\n%d\n", data1[i]);
+		printf("\ntest11\n");
 		usleep( 5000 );
 	}
+	printf("\ntest8\n");
 }
 
 
