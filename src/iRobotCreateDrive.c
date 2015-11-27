@@ -25,9 +25,10 @@ void SendToCreate( int fd, char *data, int length )
 
 void ReadFromCreate( int fd)
 {
+	printf("\ntest7\n");
 	int i;
 	char data1 [500];
-	printf("\ntest1");
+	printf("\ntest1\n");
 	for( i=0; i<500; i++ )
 	{
 		if( read(fd, &data1[i], 1) == -1 )
@@ -183,9 +184,9 @@ main(int argc, char *argv[])
 				printf("\ntest3");
 				for( x=0; x<30; x++ )
 				{
-					printf("\ntest4");
+					printf("\ntest4\n");
 					ReadFromCreate( fd );
-					printf("\ntest6");
+					printf("\ntest6\n");
 					sleep(1);
 				}
 
