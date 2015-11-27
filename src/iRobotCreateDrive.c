@@ -44,7 +44,7 @@ void ReadFromCreate( int fd)
   			printf( "\nUnable to read %s", SERPORT );
 			printf( "\nerrno = %d", errno );
 		}
-		printf("%d", data1[i]);
+		printf("\n%d", data1[i]);
 		usleep( 5000 );
 	}
 }
@@ -120,6 +120,7 @@ main(int argc, char *argv[])
 				      ((inputline[3]-0x30));
 
 				//Go Forward
+				printf( "\ntest1" );
 				if(pos == 001){
 					data[0] = 128;
 					data[1] = 131;
