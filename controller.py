@@ -49,7 +49,6 @@ def move_bot(position):
 #send message to bot telling it which position to go to
 	
 	send_message_to_bot(str(position))
-	sleep(3)
 
 	return position
 
@@ -75,7 +74,7 @@ def send_message_to_bot(msg):
 #convert the passed message string to bytes and send the message to the bot
 	#print("Sending message '" + msg + "' to bot.")		#print statement for degugging
 	MESSAGE = bytes(msg, "utf-8")
-	conn.send(MESSAGE)		#NOTE -> comment this out for testing functions independently (without message connections set up)
+	#conn.send(MESSAGE)		#NOTE -> comment this out for testing functions independently (without message connections set up)
 
 
 def bot_done():
@@ -118,35 +117,39 @@ def position_lights(position):
 #turn on the light indicating the currently selected position	
 	p.init()		#p.init() function included again here for the unit tests
 
-	#turn off all lights
-	p.digital_write(0,0)
-	p.digital_write(1,0)
-	p.digital_write(2,0)
-	p.digital_write(3,0)
-	p.digital_write(4,0)
-	p.digital_write(5,0)
-	p.digital_write(6,0)
-	p.digital_write(7,0)
-
-	#trun on applicable light
-	if(position == 0):
-		p.digital_write(0,1)
-	elif(position == 1):
-		p.digital_write(1,1)
-	elif(position == 2):
-		p.digital_write(2,1)
-	elif(position == 3):
-		p.digital_write(3,1)
-	elif(position == 4):
-		p.digital_write(4,1)
-	elif(position == 5):
-		p.digital_write(5,1)
-	elif(position == 6):
-		p.digital_write(6,1)
-	elif(position == 7):
-		p.digital_write(7,1)
-	else:
+	if(position>7): 		#if position out of range
 		return 0
+
+	else:
+		#turn off all lights
+		p.digital_write(0,0)
+		p.digital_write(1,0)
+		p.digital_write(2,0)
+		p.digital_write(3,0)
+		p.digital_write(4,0)
+		p.digital_write(5,0)
+		p.digital_write(6,0)
+		p.digital_write(7,0)
+
+		#turn on applicable light
+		if(position == 0):
+			p.digital_write(0,1)
+		elif(position == 1):
+			p.digital_write(1,1)
+		elif(position == 2):
+			p.digital_write(2,1)
+		elif(position == 3):
+			p.digital_write(3,1)
+		elif(position == 4):
+			p.digital_write(4,1)
+		elif(position == 5):
+			p.digital_write(5,1)
+		elif(position == 6):
+			p.digital_write(6,1)
+		elif(position == 7):
+			p.digital_write(7,1)
+		else:
+			return 0
 	
 	return position
 
