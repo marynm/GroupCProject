@@ -1,12 +1,38 @@
-#include <termios.h>					// tcgetattr(),
-#include <unistd.h>						// tcgetattr(),
+//---------------------------------------------------------------------------
+//	iRobot Create Control Application
+//	Written by Eric Gregori ( www.EMGRobotics.com )
+//
+//    Copyright (C) 2009  Eric Gregori
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU General Public License for more details.
+//
+//    You should have received a copy of the GNU General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+// This is a Linux application for controlling the iRobot Create from a command line, or 
+// linux STDIO pipe.  To use, simply pipe the output or your application into this application.
+// sudo ./glview | iRobotCreateDrive
+//
+//
+//---------------------------------------------------------------------------
+#include <termios.h>					// tcgetattr(), 
+#include <unistd.h>						// tcgetattr(), 
 #include <stdio.h>
 #include <errno.h>
 #include <sys/file.h>
 
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
-
+int fd, i, ch, stoptimer, pos;
+char data[256];
 
 void SendToCreate( int fd, char *data, int length )
 {
@@ -23,45 +49,62 @@ void SendToCreate( int fd, char *data, int length )
 	}
 }
 
-void ReadFromCreate( int fd)
+void goLeft(int deg)
 {
-	printf("\ntest7\n");
-	int i;
-	char data1 [500];
-	printf("\ntest1\n");
-	for( i=0; i<500; i++ )
-	{
-		printf("\ntest9\n");
-		if( read(fd, &data1[i], 1) == -1 )
-		{
-			printf("\ntest13\n");
-  		printf( "\nUnable to read %s", SERPORT );
-			printf( "\nerrno = %d", errno );
-			printf("\ntest12\n");
-		}
-		printf("\ntest10\n");
-		printf("\n%d\n", data1[i]);
-		printf("\ntest11\n");
-		usleep( 5000 );
-	}
-	printf("\ntest8\n");
+    data[0] = 128;
+    data[1] = 131;
+    data[2] = 145;
+    data[3] = 0;
+    data[4] = 32;
+    data[5] = 255;
+    data[6] = 223;
+    data[7] = 157;
+    data[8] = 0;
+    data[9] = deg;
+    SendToCreate( fd, data, 10 );
 }
 
+void goRight(int deg)
+{   
+    data[0] = 128;
+    data[1] = 131;
+    data[2] = 145;
+    data[3] = 255;
+    data[4] = 223;
+    data[5] = 0;
+    data[6] = 32;
+    data[7] = 157;
+    data[8] = 0;
+    data[9] = deg;
+    SendToCreate( fd, data, 9 );
+}
+
+void goForward(int dist)
+{
+    data[0] = 128;
+    data[1] = 131;
+    data[2] = 137;
+    data[3] = 0;
+    data[4] = 100;
+    data[5] = 128;
+    data[6] = 0;
+    data[7] = 156;
+    data[8] = ((dist >> 8) & 0xFF);
+    data[9] = (dist & 0xFF);
+    SendToCreate( fd, data, 10 );
+}
 
 
 main(int argc, char *argv[])
 {
-	int	fd, i, x, ch, stoptimer, pos;
 	struct 	termios tty;
 	char    inputline[256];
-	char	data[256];
-	char	data1[500];
 	char	*result;
 	int 	flags = fcntl(STDIN_FILENO, F_GETFL);
-
+		
 
 	printf( "\niRobot Create Control Application by Eric Gregori" );
-
+		
 	printf( "\nOpeneing serial port: %s", SERPORT );
 	fd = open(SERPORT, O_RDWR);      			//open the serial port
 
@@ -128,20 +171,13 @@ main(int argc, char *argv[])
 			stoptimer = 0;
 			if( isdigit( inputline[1] ) && isdigit( inputline[2] ) && isdigit( inputline[3] ) )
 			{
-				pos = ((inputline[1]-0x30)*100) +
+				pos = ((inputline[1]-0x30)*100) + 
 				      ((inputline[2]-0x30)*10) +
 				      ((inputline[3]-0x30));
-				printf("\ntest5");
-				if(pos == 500){
-					data[0] = 128;
-					data[1] = 131;
-					data[2] = 137;
-					data[3] = 0;
-					data[4] = 100;
-					data[5] = 128;
-					data[6] = 0;
-					SendToCreate( fd, data, 7 );
-					printf("\ntest2");
+				if(pos == 500)
+				{
+				    goForward(300);
+				    continue;
 				}
 
 				if(pos == 777)
@@ -161,14 +197,7 @@ main(int argc, char *argv[])
 				if( pos == 420)
 				{
 					// turn left
-                			data[0] = 128;
-					data[1] = 131;
-					data[2] = 145;
-					data[3] = 0;
-					data[4] = 32;
-					data[5] = 255;
-					data[6] = 223;
-					SendToCreate( fd, data, 7 );
+					goLeft(90);
 					printf( "\nleft" );
 					continue;
 				}
@@ -176,27 +205,10 @@ main(int argc, char *argv[])
 				if( pos == 666 )
 				{
 					// trun right
-                			data[0] = 128;
-					data[1] = 131;
-					data[2] = 145;
-					data[3] = 255;
-					data[4] = 223;
-					data[5] = 0;
-					data[6] = 32;
-					SendToCreate( fd, data, 7 );
+					goRight(90);
 					printf( "\nright" );
 					continue;
-				}
-				printf("\ntest3");
-				for( x=0; x<30; x++ )
-				{
-					printf("\ntest4\n");
-					ReadFromCreate( fd );
-					printf("\ntest6\n");
-					sleep(1);
-				}
-
-				/*
+				}/*
 
 				// stop
 	                	data[0] = 128;
@@ -215,3 +227,6 @@ main(int argc, char *argv[])
 
 	close( fd );
 }
+
+
+	
