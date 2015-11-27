@@ -133,6 +133,7 @@ main(int argc, char *argv[])
 					data[5] = 128;
 					data[6] = 0;
 					SendToCreate( fd, data, 7 );
+					printf("test2");
 				}
 
 				if(pos == 777)
@@ -178,9 +179,11 @@ main(int argc, char *argv[])
 					printf( "\nright" );
 					continue;
 				}
+				printf("test3");
 				for( x=0; x<30; x++ )
 				{
-					ReadFromCreate(fd);
+					printf("test4");
+					ReadFromCreate( fd );
 					sleep(1);
 				}
 
