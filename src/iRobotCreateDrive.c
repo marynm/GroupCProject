@@ -25,9 +25,13 @@
 #include <math.h>
 #include <sys/file.h>
 
+#define PI 3.14159265
+
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
-int fd, i, ch, pos, cur_x, cur_y, cur_Angle;
+int fd, i, ch, pos, cur_x, cur_y, cur_Angle, dist_travel;
+double cur_x_change, cur_y_change;
+char ret;
 char data[256];
 
 void SendToCreate( int fd, char *data, int length )
@@ -45,97 +49,224 @@ void SendToCreate( int fd, char *data, int length )
 	}
 }
 
+char ReceiveFromCreate(int fd)
+{
+	if(read(fd, &ret, 1) == -1)
+	{
+		printf("unable to read\n");
+	}
+	ret &= 0x03;
+	return ret;
+}
+
+void AdjustPosition()
+{
+	if (cur_Angle <= 90)
+	{
+		cur_x_change = (double) cur_x + (cos(cur_Angle * PI / 180) * (double) dist_travel);
+		cur_y_change = (double) cur_y + (sin(cur_Angle * PI / 180) * (double) dist_travel);
+	}
+	else if(cur_Angle <= 180)
+	{
+		cur_x_change = (double) cur_x - (cos((180 - cur_Angle) * PI / 180) * (double) dist_travel);
+		cur_y_change = (double) cur_y + (sin((180 - cur_Angle) * PI / 180) * (double) dist_travel);
+	}
+	else if(cur_Angle <= 270)
+	{
+		cur_x_change = (double) cur_x - (cos((cur_Angle - 180) * PI / 180) * (double) dist_travel);
+		cur_y_change = (double) cur_y - (sin((cur_Angle - 180) * PI / 180) * (double) dist_travel);
+	}
+	else
+	{
+		cur_x_change = (double) cur_x + (cos((360 - cur_Angle) * PI / 180) * (double) dist_travel);
+		cur_y_change = (double) cur_y - (sin((360 - cur_Angle) * PI / 180) * (double) dist_travel);
+	}
+	cur_x = (int)floor(cur_x_change);
+	cur_y = (int)floor(cur_y_change);
+}
+
+void ObstacleHandler()
+{
+	printf("Obs(1) angle is %d\n", cur_Angle);
+	if(ret == 2)
+	{
+		goRight(90);
+		if(cur_Angle > 90)
+		{
+			cur_Angle = cur_Angle - 90;
+		}
+		else
+		{
+			cur_Angle = 360 + cur_Angle - 90;
+		}
+	}
+	else
+	{
+		goLeft(90);
+		if(cur_Angle >= 270)
+		{
+			cur_Angle = cur_Angle + 90 - 360;
+		}
+		else
+		{
+			cur_Angle = cur_Angle + 90;
+		}
+	}
+	printf("Obs(2) angle is %d\n", cur_Angle);
+	goForward(300);
+	AdjustPosition();
+	if(dist_travel < 300)
+	{
+		ObstacleHandler();
+	}
+}
+
 void PositionMover(int pos_x, int pos_y)
 {
 	//Get the Hypotenuse and Angle
 	double dist;
 	double angel;
-	dist = hypot( abs(cur_x-pos_x),  abs(cur_y-pos_y));
-  	angel =  atan( abs(cur_y-pos_y) /  abs(cur_x-pos_x));
-	int dist_use = (int)floor(dist);
-	printf("Hypotenuse is %d\n", dist_use);
-	int angle_use = (int)floor(angel);
-	printf("Angle is %d\n", angle_use);
-
-	if (cur_x < pos_x)
+	int difx;
+	int dify;
+	double difx2;
+	double dify2;
+	double toDeg = 180 / PI;
+	while(((pos_x + 3) < cur_x || (pos_x - 3) > cur_x) && (cur_y < (pos_y - 3) || cur_y > (pos_y + 3)))
 	{
-		if(cur_y < pos_y)
+
+		dify = abs(cur_y-pos_y);
+		difx = abs(cur_x-pos_x);
+		difx2 = (double)(difx);
+		dify2 = (double)(dify);
+		dist = hypot( abs(cur_x-pos_x),  abs(cur_y-pos_y));
+  		angel =  atan(dify2 / difx2) * toDeg;
+
+		int dist_use = (int)floor(dist);
+
+		int angle_use = (int)floor(angel);
+		printf("Current Angle is %d\n", cur_Angle);
+		printf("Angle Using is %d\n", angle_use);
+
+		if(cur_x == pos_y && cur_y == pos_y)
 		{
-			//Upper Right
-			//Find Angle
-			if(cur_Angle < angle_use)
+			//Do nothing
+		}
+		else if(cur_Angle == angle_use)
+		{
+			goForward(dist_use);
+		}
+
+		else if (cur_x < pos_x)
+		{
+			if(cur_y < pos_y)
 			{
-				goLeft(angle_use - cur_Angle);
-			}
-			else if(cur_Angle < 180)
-			{
-				goRight(cur_Angle - angle_use);
+				//Upper Right
+				//Find Angle
+				if(cur_Angle < angle_use)
+				{
+					goLeft(angle_use - cur_Angle);
+				}
+				else if(cur_Angle < 180)
+				{
+					goRight(cur_Angle - angle_use);
+				}
+				else
+				{
+					goLeft(360 - cur_Angle + angle_use);
+				}
+				cur_Angle = angle_use;
+				//Give hypotenuse
+				goForward(dist_use);
+				AdjustPosition();
+				if(dist_travel < dist_use)
+				{
+					ObstacleHandler();
+				}
 			}
 			else
 			{
-				goLeft(360 - cur_Angle + angle_use);
+				//Lower Right
+				//Find Angle
+				if(cur_Angle > (360 - angle_use))
+				{
+					goRight(cur_Angle - (360 - angle_use));
+				}
+				else if(cur_Angle > 90)
+				{
+					goLeft(360 - angle_use - cur_Angle);
+				}
+				else
+				{
+					goRight(cur_Angle + angle_use);
+				}
+				cur_Angle = 360 - angle_use;
+				//Give hypotenuse
+				goForward(dist_use);
+				AdjustPosition();
+				if(dist_travel < dist_use)
+				{
+					ObstacleHandler();
+				}
 			}
-			cur_Angle = angle_use;
-			//Give hypotenuse
-			goForward(dist_use);
 		}
+
 		else
 		{
-			//Lower Right
-			//Find Angle
-			if(cur_Angle > (360 - angle_use))
+			if(cur_y < pos_y)
 			{
-				goRight(cur_Angle - (360 - angle_use));
-			}
-			else if(cur_Angle > 90)
-			{
-				goLeft(360 - angle_use - cur_Angle);
+				//Upper Left
+				//Find Angle
+				if(cur_Angle < (angle_use + 90))
+				{
+					goLeft((angle_use + 90) - cur_Angle);
+				}
+				else
+				{
+					goRight(cur_Angle - (angle_use + 90));
+				}
+				cur_Angle = 180 - angle_use;
+				//Give hypotenuse
+				goForward(dist_use);
+				AdjustPosition();
+				if(dist_travel < dist_use)
+				{
+					ObstacleHandler();
+				}
 			}
 			else
 			{
-				goRight(cur_Angle + angle_use);
+				//Lower Left
+				//Find Angle
+				if(cur_Angle < (angle_use + 180))
+				{
+					goLeft((angle_use + 180) - cur_Angle);
+				}
+				else
+				{
+					goRight(cur_Angle - (angle_use + 180));
+				}
+				cur_Angle = angle_use + 180;
+				//Give hypotenuse
+				goForward(dist_use);
+				AdjustPosition();
+				if(dist_travel < dist_use)
+				{
+					ObstacleHandler();
+				}
 			}
-			cur_Angle = 360 - angle_use;
-			//Give hypotenuse
-			goForward(dist_use);
 		}
 	}
+}
 
-	else
-	{
-		if(cur_y < pos_y)
-		{
-			//Upper Left
-			//Find Angle
-			if(cur_Angle < (angle_use + 90))
-			{
-				goLeft((angle_use + 90) - cur_Angle);
-			}
-			else
-			{
-				goRight(cur_Angle - (angle_use + 90));
-			}
-			cur_Angle = angle_use + 90;
-			//Give hypotenuse
-			goForward(dist_use);
-		}
-		else
-		{
-			//Lower Left
-			//Find Angle
-			if(cur_Angle < (angle_use + 180))
-			{
-				goLeft((angle_use + 180) - cur_Angle);
-			}
-			else
-			{
-				goRight(cur_Angle - (angle_use + 180));
-			}
-			cur_Angle = angle_use + 180;
-			//Give hypotenuse
-			goForward(dist_use);
-		}
-	}
+char polldata()
+{
+	//this will request sensor data from the bot
+	data[0] = 128;
+	data[1] = 131;
+	data[2] = 142;
+	data[3] = 7;
+	SendToCreate(fd, data, 4);
+	return ReceiveFromCreate(fd);
 }
 
 void goLeft(int deg)
@@ -163,24 +294,42 @@ void goRight(int deg)
     data[5] = 0;
     data[6] = 32;
     data[7] = 157;
-    data[8] = 0;
-    data[9] = deg;
-    SendToCreate( fd, data, 9 );
+    data[8] = 0xFF;
+    data[9] = ((deg ^ 0xFF) + 1);
+    SendToCreate( fd, data, 10 );
 }
 
 void goForward(int dist)
 {
-    data[0] = 128;
-    data[1] = 131;
-    data[2] = 137;
-    data[3] = 0;
-    data[4] = 100;
-    data[5] = 128;
-    data[6] = 0;
-    data[7] = 156;
-    data[8] = ((dist >> 8) & 0xFF);
-    data[9] = (dist & 0xFF);
-    SendToCreate( fd, data, 10 );
+	for(dist_travel = 0;dist_travel < dist;dist_travel += 5)
+	{
+    	data[0] = 128;
+    	data[1] = 131;
+    	data[2] = 137;
+    	data[3] = 0;
+    	data[4] = 100;
+    	data[5] = 128;
+    	data[6] = 0;
+    	data[7] = 156;
+    	data[8] = 0;
+    	data[9] = 5;
+    	SendToCreate( fd, data, 10 );
+		if(polldata())
+			break;
+	}
+	stop();
+}
+
+void stop()
+{
+	data[0] = 128;
+	data[1] = 131;
+	data[2] = 145;
+	data[3] = 0;
+	data[4] = 0;
+	data[5] = 0;
+	data[6] = 0;
+	SendToCreate( fd, data, 7 );
 }
 
 
@@ -240,10 +389,10 @@ main(int argc, char *argv[])
 	cur_x = 0;
 	cur_y = 0;
 	cur_Angle = 0;
-	pos1_x = 1200;
-	pos1_y = 1000;
-	pos2_x = 1600;
-	pos2_y = 700;
+	pos1_x = 120;
+	pos1_y = 100;
+	pos2_x = 200;
+	pos2_y = 300;
 
 	while( 1 )
 	{
@@ -268,25 +417,20 @@ main(int argc, char *argv[])
 				if(pos == 001)
 				{
 					PositionMover(pos1_x, pos1_y);
+					stop();
 				}
 
 				//Go to Position Two
 				if(pos == 002)
 				{
 					PositionMover(pos2_x, pos2_y);
+					stop();
 				}
 
 				if(pos == 777)
 				{
 					// send STOP
-		                	data[0] = 128;
-					data[1] = 131;
-					data[2] = 145;
-					data[3] = 0;
-					data[4] = 0;
-					data[5] = 0;
-					data[6] = 0;
-					SendToCreate( fd, data, 7 );
+		            stop();
 					continue;
 				}
 
