@@ -5,7 +5,7 @@ all: GroupCProject clean
 
 GroupCProject: iRobot.o iRobotCreateDrive.o
 	$(CC) iRobot.o -o ./bin/iRobot
-	$(CC) iRobotCreateDrive.o -o ./bin/iRobotCreateDrive
+	$(CC) iRobotCreateDrive.o -o ./bin/iRobotCreateDrive -lm
 
 iRobot.o: ./src/iRobot.c
 	$(CC) $(CFLAGS) ./src/iRobot.c

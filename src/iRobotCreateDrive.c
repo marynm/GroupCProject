@@ -51,7 +51,7 @@ void PositionMover(int pos_x, int pos_y)
 	double dist;
 	double angel;
 	dist = hypot( abs(cur_x-pos_x),  abs(cur_y-pos_y));
-  angel =  atan( abs(cur_y-pos_y) /  abs(cur_x-pos_x));
+  	angel =  atan( abs(cur_y-pos_y) /  abs(cur_x-pos_x));
 	int dist_use = (int)floor(dist);
 	int angle_use = (int)floor(angel);
 
@@ -71,7 +71,7 @@ void PositionMover(int pos_x, int pos_y)
 			}
 			else
 			{
-				goLeft(360- cur_Angle + angle_use);
+				goLeft(360 - cur_Angle + angle_use);
 			}
 			cur_Angle = angle_use;
 			//Give hypotenuse
@@ -81,13 +81,13 @@ void PositionMover(int pos_x, int pos_y)
 		{
 			//Lower Right
 			//Find Angle
-			if(cur_Angle > (360-angle_use))
+			if(cur_Angle > (360 - angle_use))
 			{
-				goRight(cur_Angle-(360-angle_use));
+				goRight(cur_Angle - (360 - angle_use));
 			}
 			else if(cur_Angle > 90)
 			{
-				goLeft(360-angle_use-cur_Angle);
+				goLeft(360 - angle_use - cur_Angle);
 			}
 			else
 			{
