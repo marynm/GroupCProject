@@ -51,7 +51,7 @@ void PositionMover(int pos_x, int pos_y)
 	double dist;
 	double angel;
 	dist = hypot( abs(cur_x-pos_x),  abs(cur_y-pos_y));
-  angel =  atan( abs(cur_y-pos_y),  abs(cur_x-pos_x));
+  angel =  atan( abs(cur_y-pos_y) /  abs(cur_x-pos_x));
 	int dist_use = (int)floor(dist);
 	int angle_use = (int)floor(angel);
 
