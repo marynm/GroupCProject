@@ -50,8 +50,8 @@ void PositionMover(int pos_x, int pos_y)
 	//Get the Hypotenuse and Angle
 	double dist;
 	double angel;
-	dist = Math.hypot(Math.abs(cur_x-pos_x), Math.abs(cur_y-pos_y));
-  angel = Math.atan(Math.abs(cur_y-pos_y), Math.abs(cur_x-pos_x));
+	dist = math.hypot(math.abs(cur_x-pos_x), math.abs(cur_y-pos_y));
+  angel = math.atan(math.abs(cur_y-pos_y), math.abs(cur_x-pos_x));
 	int dist_use = (int)floor(dist);
 	int angle_use = (int)floor(angel);
 
@@ -83,7 +83,7 @@ void PositionMover(int pos_x, int pos_y)
 			//Find Angle
 			if(cur_Angle > (360-angle_use))
 			{
-				goRight(cur_angle-(360-angle_use));
+				goRight(cur_Angle-(360-angle_use));
 			}
 			else if(cur_Angle > 90)
 			{
@@ -232,7 +232,6 @@ main(int argc, char *argv[])
 		printf( "\ntcsetattr successfull" );
 
 	fcntl(STDIN_FILENO, F_SETFL, flags | O_NONBLOCK);
-	stoptimer = 0;
 
 
 	//Define coordinates
