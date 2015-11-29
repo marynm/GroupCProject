@@ -1,25 +1,20 @@
 //---------------------------------------------------------------------------
-//	iRobot Create Control Application
-//	Written by Eric Gregori ( www.EMGRobotics.com )
+//	iRobot Create Movement code
 //
-//    Copyright (C) 2009  Eric Gregori
+// Problems and Solutions
+// 1. Wait distance and delay are rerouting upon obstacles
+// - Make a loop that continuously sends a very minimal distance (ie 1 mm)
+// - Continous update of cur_x and cur_y
+// - make a constant sensor check, stop loop if sensor hit
 //
-//    This program is free software: you can redistribute it and/or modify
-//    it under the terms of the GNU General Public License as published by
-//    the Free Software Foundation, either version 3 of the License, or
-//    (at your option) any later version.
+// 2. Bot only accepts ints, but computations take doubles
+// - Keep a backup of doubles in code
+// - change double to int for all bot communication
 //
-//    This program is distributed in the hope that it will be useful,
-//    but WITHOUT ANY WARRANTY; without even the implied warranty of
-//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//    GNU General Public License for more details.
-//
-//    You should have received a copy of the GNU General Public License
-//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-//
-// This is a Linux application for controlling the iRobot Create from a command line, or
-// linux STDIO pipe.  To use, simply pipe the output or your application into this application.
-// sudo ./glview | iRobotCreateDrive
+// 3. No seperate position tracker
+// - Start out at 0.0
+// - Have 360 degree, like a regular x/y graph
+// - Start pointed out at 0 angle
 //
 //
 //---------------------------------------------------------------------------
@@ -27,11 +22,12 @@
 #include <unistd.h>						// tcgetattr(),
 #include <stdio.h>
 #include <errno.h>
+#include <math.h>
 #include <sys/file.h>
 
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
-int fd, i, ch, stoptimer, pos, cur_x, cur_y;
+int fd, i, ch, pos, cur_x, cur_y, cur_Angle;
 char data[256];
 
 void SendToCreate( int fd, char *data, int length )
@@ -46,6 +42,97 @@ void SendToCreate( int fd, char *data, int length )
 			printf( "\nerrno = %d", errno );
 		}
 		usleep( 5000 );
+	}
+}
+
+void PositionMover(int pos_x, int pos_y)
+{
+	//Get the Hypotenuse and Angle
+	double dist;
+	double angel;
+	dist = Math.hypot(Math.abs(cur_x-pos_x), Math.abs(cur_y-pos_y));
+  angel = Math.atan(Math.abs(cur_y-pos_y), Math.abs(cur_x-pos_x));
+	int dist_use = (int)floor(dist);
+	int angle_use = (int)floor(angel);
+
+	if (cur_x < pos_x)
+	{
+		if(cur_y < pos_y)
+		{
+			//Upper Right
+			//Find Angle
+			if(cur_Angle < angle_use)
+			{
+				goLeft(angle_use - cur_Angle);
+			}
+			else if(cur_Angle < 180)
+			{
+				goRight(cur_Angle-angle_use);
+			}
+			else
+			{
+				goLeft(360- cur_Angle + angle_use);
+			}
+			cur_Angle = angle_use;
+			//Give hypotenuse
+			goForward(dist_use);
+		}
+		else
+		{
+			//Lower Right
+			//Find Angle
+			if(cur_Angle > (360-angle_use))
+			{
+				goRight(cur_angle-(360-angle_use));
+			}
+			else if(cur_Angle > 90)
+			{
+				goLeft(360-angle_use-cur_Angle);
+			}
+			else
+			{
+				goRight(cur_Angle + angle_use);
+			}
+			cur_Angle = 360 - angle_use;
+			//Give hypotenuse
+			goForward(dist_use);
+		}
+	}
+
+	else
+	{
+		if(cur_y < pos_y)
+		{
+			//Upper Left
+			//Find Angle
+			if(cur_Angle < (angle_use + 90))
+			{
+				goLeft((angle_use+90) - cur_Angle);
+			}
+			else
+			{
+				goRight(cur_Angle - (angle_use+90));
+			}
+			cur_Angle = angle_use + 90;
+			//Give hypotenuse
+			goForward(dist_use);
+		}
+		else
+		{
+			//Lower Left
+			//Find Angle
+			if(cur_Angle < (angle_use + 180))
+			{
+				goLeft((angle_use+180) - cur_Angle);
+			}
+			else
+			{
+				goRight(cur_Angle - (angle_use+180));
+			}
+			cur_Angle = angle_use + 180;
+			//Give hypotenuse
+			goForward(dist_use);
+		}
 	}
 }
 
@@ -110,7 +197,7 @@ main(int argc, char *argv[])
 
    	if ( fd < 0 )
    	{
-      		printf( "\nUnable to open %s", SERPORT );
+    printf( "\nUnable to open %s", SERPORT );
 		printf( "\nerrno = %d", errno );
 		exit(0);
    	}
@@ -151,6 +238,7 @@ main(int argc, char *argv[])
 	//Define coordinates
 	cur_x = 0;
 	cur_y = 0;
+	cur_Angle = 0;
 	pos1_x = 1200;
 	pos1_y = 1000;
 	pos2_x = 1600;
@@ -158,27 +246,12 @@ main(int argc, char *argv[])
 
 	while( 1 )
 	{
-		stoptimer++;
-		/*if( stoptimer >= 2 )
-		{
-			// send STOP
-            		data[0] = 128;
-			data[1] = 131;
-			data[2] = 145;
-			data[3] = 0;
-			data[4] = 0;
-			data[5] = 0;
-			data[6] = 0;
-			SendToCreate( fd, data, 7 );
-		}*/
 		usleep( 250000 );
-		//printf( "\nWaiting" );
 		result = fgets( inputline, 256, stdin );
 		if( result == 0 ) continue;
 		printf( "\ninputline=%s", inputline );
 		if( inputline[0] == '^' )
 		{
-			stoptimer = 0;
 			if( isdigit( inputline[1] ) && isdigit( inputline[2] ) && isdigit( inputline[3] ) )
 			{
 				pos = ((inputline[1]-0x30)*100) +
@@ -190,42 +263,17 @@ main(int argc, char *argv[])
 				    continue;
 				}
 
-				//Needs to become it's own function
+				//Go to Position One
 				if(pos == 001)
 				{
+					PositionMover(pos1_x, pos1_y);
+				}
 
-				  if (cur_x < pos1_x)
-				  {
-						if(cur_y < pos1_y)
-						{
-					    //Upper Right
-							//Find Hypotenuse c=sqrt((pos1_x-cur_x) ^2 + (pos1_y-cur_y) ^2)
-							//Find Angle
-						}
-						else
-						{
-							//Lower Right
-							//Find Hypotenuse c=sqrt((pos1_x-cur_x) ^2 + (cur_y-pos1_y) ^2)
-							//Find Angle
-						}
-				  }
-
-					else
-				  {
-						if(cur_y < pos1_y)
-						{
-					    //Upper Left
-							//Find Hypotenuse c=sqrt((cur_x-pos1_x) ^2 + (pos1_y-cur_y) ^2)
-							//Find Angle
-						}
-						else
-						{
-							//Lower Left
-							//Find Hypotenuse c=sqrt((cur_x-pos1_x) ^2 + (cur_y-pos_y) ^2)
-							//Find Angle
-						}
-				  }
-				} //Full mover
+				//Go to Position Two
+				if(pos == 002)
+				{
+					PositionMover(pos2_x, pos2_y);
+				}
 
 				if(pos == 777)
 				{
@@ -269,8 +317,6 @@ main(int argc, char *argv[])
 				printf( "\nstop" ); */
 			}
 		}
-
 	}
-
 	close( fd );
 }
