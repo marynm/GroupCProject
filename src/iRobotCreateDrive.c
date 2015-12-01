@@ -300,7 +300,7 @@ void goRight(int deg)
     data[5] = 0;
     data[6] = 32;
     data[7] = 157;
-    data[8] = 0;
+    data[8] = 0xFF;
     data[9] = (deg ^ 0xFF) + 1;
     SendToCreate( fd, data, 10 );
 }
