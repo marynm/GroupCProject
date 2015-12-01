@@ -251,7 +251,7 @@ void PositionMover(int pos_x, int pos_y)
 				//Find Angle
 				if(cur_Angle < (angle_use + 90))
 				{
-					goLeft((angle_use + 90) - cur_Angle);
+					goLeft(180 - angle_use - cur_Angle);
 				}
 				else
 				{
