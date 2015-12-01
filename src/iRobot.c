@@ -7,7 +7,7 @@
 void takePicture();
 int pic_num = 0;
 int song_num = 0;
-int list_size = 0;
+int list_size = -2;//starts at -2 to account for . and ..
 char out[BUFSIZ];
 
 int main()
@@ -27,7 +27,6 @@ int main()
 	printf("size is: %i\n",list_size);
 	char song_list[list_size][BUFSIZ];
 	init_music(song_list);
-	printf("3rd item in song list: %s\n",song_list[2]);
     //takePicture();
     return 0;
 }
@@ -41,19 +40,60 @@ void takePicture()
     pic_num++;
 }
 
-void init_music(char song_list[list_size][BUFSIZ])
+int init_music(char song_list[list_size][BUFSIZ])
 {
     DIR *dir;
     struct dirent *entry;
     int cur_song = 0;
+    int ignore_dir = 2;
     if(!(dir = opendir("./music/")))
     {
 		return -1;
 	}
     while((entry = readdir(dir)) != NULL)
     {
-		strcpy(song_list[cur_song],entry->d_name);
-		cur_song++;
+	if(ignore_dir)//to ignore . and ..
+	{
+	    ignore_dir--;
+	}
+	else
+	{
+	    strcpy(song_list[cur_song],entry->d_name);
+	    cur_song++;
+	}
     }
     closedir(dir);
+    return 0;
+}
+
+void play_song(char song_list[list_size][BUFSIZ])
+{
+    sprintf(out,"mplayer ./music/%s",song_list[song_num]);
+    system(out);
+    song_num++;
+}
+
+void stop_song()
+{
+    //TODO
+}
+
+void next_song(char song_list[list_size][BUFSIZ])
+{
+    if(song_num < list_size)
+    {
+	stop_song();
+	song_num++;
+	play_song(song_list);
+    }
+}
+
+void previous_song(char song_list[list_size][BUFSIZ])
+{
+    if(song_num >= 0)
+    {
+	stop_song();
+	song_num--;
+	play_song(song_list);
+    }
 }
