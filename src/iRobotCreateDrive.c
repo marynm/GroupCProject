@@ -81,8 +81,14 @@ void AdjustPosition()
 		cur_x_change = (double) cur_x + (cos((360 - cur_Angle) * PI / 180) * (double) dist_travel);
 		cur_y_change = (double) cur_y - (sin((360 - cur_Angle) * PI / 180) * (double) dist_travel);
 	}
+	printf("The current X position is %d\n", cur_x);
+	printf("The current Y position is %d\n", cur_y);
+	printf("The x Position is changing by %f\n", cur_x_change);
+	printf("The y Position is changing by %f\n", cur_y_change);
 	cur_x = (int)floor(cur_x_change);
 	cur_y = (int)floor(cur_y_change);
+	printf("The changed X position is now %d\n", cur_x);
+	printf("The changed Y position is now %d\n", cur_y);
 }
 
 void ObstacleHandler()
@@ -393,6 +399,10 @@ main(int argc, char *argv[])
 	pos1_y = 100;
 	pos2_x = 200;
 	pos2_y = 300;
+	pos3_x = 500;
+	pos3_y = 500;
+	pos4_x = 700;
+	pos4_y = 100;
 
 	while( 1 )
 	{
@@ -422,6 +432,20 @@ main(int argc, char *argv[])
 
 				//Go to Position Two
 				if(pos == 002)
+				{
+					PositionMover(pos2_x, pos2_y);
+					stop();
+				}
+				
+				//Go to Position Three
+				if(pos == 003)
+				{
+					PositionMover(pos2_x, pos2_y);
+					stop();
+				}
+				
+				//Go to Position Four
+				if(pos == 004)
 				{
 					PositionMover(pos2_x, pos2_y);
 					stop();
