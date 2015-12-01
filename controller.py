@@ -27,7 +27,7 @@ def button_monitor():
 				flash_lights()	
 				position_lights(position)
 
-				if(position == 7):		#if the bot has reached the dispenser, send message to the dispenser causeing it to dispense
+				if(position == 7):		#if the bot is going to the dispenser, wait for the bot to get there and then start dispensing
 					alert_dispenser()	
 		
 		elif(p.digital_read(2)):		#button 2 pressed: Take picture
@@ -64,7 +64,10 @@ def change_song():
 	send_message_to_bot("music")
 
 def alert_dispenser():
-#Alert the deispenser that the bot is coming to that it is prepaered to dispense
+#Wait for bot to reach the dispenserm, then alert the deispenser that the bot has arrived to being dispensing
+	
+	while(bot_done()==0):				#wait until bot has arrived at the dispenser
+		sleep(2)
 	print("Alerting dispenser")			#print statement for degugging
 	MESSAGE = bytes("dispenser", "utf-8")
 	sock.sendto(MESSAGE, (UDP_IP, UDP_PORT))
@@ -165,7 +168,7 @@ if __name__ == '__main__':
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.bind((TCP_IP, TCP_PORT))
 	s.listen(1)
-	conn, addr = s.accept()
+	#conn, addr = s.accept()
 
 	print("TCP connection set up")		#print statement for degugging
 	
