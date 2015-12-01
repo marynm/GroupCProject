@@ -82,7 +82,7 @@ void AdjustPosition()
 		cur_y_change = (double) cur_y - (sin((360 - cur_Angle) * PI / 180) * (double) dist_travel);
 	}
 	printf("The current X position is %d\n", cur_x);
-	printf("The current Y position is %d\n", cur_y);
+	printf("The current Y position is now %d\n", cur_y);
 	printf("The x Position is changing by %f\n", cur_x_change);
 	printf("The y Position is changing by %f\n", cur_y_change);
 	cur_x = (int)floor(cur_x_change);
@@ -345,7 +345,7 @@ main(int argc, char *argv[])
 	char    inputline[256];
 	char	*result;
 	int 	flags = fcntl(STDIN_FILENO, F_GETFL);
-	int	pos1_x, pos1_y, pos2_x, pos2_y;
+	int	pos1_x, pos1_y, pos2_x, pos2_y, pos3_x, pos3_y, pos4_x, pos4_y;
 
 	printf( "\niRobot Create Control Application by Eric Gregori" );
 
@@ -401,8 +401,8 @@ main(int argc, char *argv[])
 	pos2_y = 300;
 	pos3_x = 500;
 	pos3_y = 500;
-	pos4_x = 700;
-	pos4_y = 100;
+	pos4_x = 100;
+	pos4_y = 700;
 
 	while( 1 )
 	{
@@ -440,14 +440,14 @@ main(int argc, char *argv[])
 				//Go to Position Three
 				if(pos == 003)
 				{
-					PositionMover(pos2_x, pos2_y);
+					PositionMover(pos3_x, pos3_y);
 					stop();
 				}
 				
 				//Go to Position Four
 				if(pos == 004)
 				{
-					PositionMover(pos2_x, pos2_y);
+					PositionMover(pos4_x, pos4_y);
 					stop();
 				}
 
