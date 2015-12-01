@@ -59,28 +59,33 @@ char ReceiveFromCreate(int fd)
 	return ret;
 }
 
-void AdjustPosition()
+void ChangedPos(int Howfar)
 {
 	if (cur_Angle <= 90)
 	{
-		cur_x_change = (double) cur_x + (cos(cur_Angle * PI / 180) * (double) dist_travel);
-		cur_y_change = (double) cur_y + (sin(cur_Angle * PI / 180) * (double) dist_travel);
+		cur_x_change = (double) cur_x + (cos(cur_Angle * PI / 180) * (double) Howfar);
+		cur_y_change = (double) cur_y + (sin(cur_Angle * PI / 180) * (double) Howfar);
 	}
 	else if(cur_Angle <= 180)
 	{
-		cur_x_change = (double) cur_x - (cos((180 - cur_Angle) * PI / 180) * (double) dist_travel);
-		cur_y_change = (double) cur_y + (sin((180 - cur_Angle) * PI / 180) * (double) dist_travel);
+		cur_x_change = (double) cur_x - (cos((180 - cur_Angle) * PI / 180) * (double) Howfar);
+		cur_y_change = (double) cur_y + (sin((180 - cur_Angle) * PI / 180) * (double) Howfar);
 	}
 	else if(cur_Angle <= 270)
 	{
-		cur_x_change = (double) cur_x - (cos((cur_Angle - 180) * PI / 180) * (double) dist_travel);
-		cur_y_change = (double) cur_y - (sin((cur_Angle - 180) * PI / 180) * (double) dist_travel);
+		cur_x_change = (double) cur_x - (cos((cur_Angle - 180) * PI / 180) * (double) Howfar);
+		cur_y_change = (double) cur_y - (sin((cur_Angle - 180) * PI / 180) * (double) Howfar);
 	}
 	else
 	{
-		cur_x_change = (double) cur_x + (cos((360 - cur_Angle) * PI / 180) * (double) dist_travel);
-		cur_y_change = (double) cur_y - (sin((360 - cur_Angle) * PI / 180) * (double) dist_travel);
+		cur_x_change = (double) cur_x + (cos((360 - cur_Angle) * PI / 180) * (double) Howfar);
+		cur_y_change = (double) cur_y - (sin((360 - cur_Angle) * PI / 180) * (double) Howfar);
 	}
+}
+
+void AdjustPosition()
+{
+	ChangedPos(dist_travel);
 	printf("The current X position is %d\n", cur_x);
 	printf("The current Y position is now %d\n", cur_y);
 	printf("The x Position is changing by %f\n", cur_x_change);
@@ -93,6 +98,7 @@ void AdjustPosition()
 
 void ObstacleHandler()
 {
+	int ObstacleDist = 300;
 	printf("Obs(1) angle is %d\n", cur_Angle);
 	if(ret == 2)
 	{
@@ -118,12 +124,33 @@ void ObstacleHandler()
 			cur_Angle = cur_Angle + 90;
 		}
 	}
-	printf("Obs(2) angle is %d\n", cur_Angle);
-	goForward(300);
-	AdjustPosition();
-	if(dist_travel < 300)
+	
+	//Error Checking The goForward
+	ChangedPos(ObstacleDist);
+	while(cur_x_change < 0 || cur_y_change < 0)
 	{
-		ObstacleHandler();
+		ObstacleDist = ObstacleDist - 5;
+		ChangedPos(ObstacleDist);
+		if(ObstacleDist <= 0)
+		{
+			break;
+		}
+	}
+	
+	printf("Obs(2) angle is %d\n", cur_Angle);
+	
+	if(ObstacleDist <= 0)
+	{
+		printf("Error, cannot move around obstacle");
+	}
+	else
+	{
+		goForward(ObstacleDist);
+		AdjustPosition();
+		if(dist_travel < ObstacleDist)
+		{
+			ObstacleHandler();
+		}
 	}
 }
 
