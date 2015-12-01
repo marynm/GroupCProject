@@ -162,3 +162,15 @@ void camera_thread_function()
 	}
 }
 
+void communication_thread_function()
+{
+	while(1)
+	{
+		sleep(1);
+		//read(sockfd, &ch, 1);
+		//printf("char from server = %c\n", ch);
+
+	}
+
+}
+
