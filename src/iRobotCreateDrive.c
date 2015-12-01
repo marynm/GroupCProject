@@ -285,8 +285,8 @@ void goLeft(int deg)
     data[5] = 255;
     data[6] = 223;
     data[7] = 157;
-    data[8] = (deg >> 8) & 0xFF;
-    data[9] = deg & 0xFF;
+    data[8] = 0;
+    data[9] = deg;
     SendToCreate( fd, data, 10 );
 }
 
@@ -300,8 +300,8 @@ void goRight(int deg)
     data[5] = 0;
     data[6] = 32;
     data[7] = 157;
-    data[8] = (((deg >> 8) & 0xFF) ^ 0xFF) + 1;
-    data[9] = ((deg & 0xFF) ^ 0xFF) + 1;
+    data[8] = 0;
+    data[9] = (deg ^ 0xFF) + 1;
     SendToCreate( fd, data, 10 );
 }
 
