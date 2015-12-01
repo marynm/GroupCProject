@@ -5,7 +5,6 @@ from time import sleep
 import socket
 
 
-
 def button_monitor():
 #When the button to scroll is pressed, the lights move to indicate which of the 8 possible pre-programmed loactions the bot will move to. Position 7 is the dispensor.
 #When the camera, or song buttons are pressed, the apllicable message is sent to the bot and all of the lights flash once to indicate the button press
@@ -77,7 +76,7 @@ def send_message_to_bot(msg):
 #convert the passed message string to bytes and send the message to the bot
 	#print("Sending message '" + msg + "' to bot.")		#print statement for degugging
 	MESSAGE = bytes(msg, "utf-8")
-	#conn.send(MESSAGE)		#NOTE -> comment this out for testing functions independently (without message connections set up)
+	conn.send(MESSAGE)		#NOTE -> comment this out for testing functions independently (without message connections set up)
 
 
 def bot_done():
@@ -168,9 +167,9 @@ if __name__ == '__main__':
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	s.bind((TCP_IP, TCP_PORT))
 	s.listen(1)
-	#conn, addr = s.accept()
+	conn, addr = s.accept()
 
-	print("TCP connection set up")		#print statement for degugging
+	print("TCP connection with Bot set up")		#print statement for degugging
 	
 	#UDP for communication with dispenser
 	UDP_IP = "10.0.0.21"	#IP of dispenser device
