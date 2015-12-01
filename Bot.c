@@ -9,11 +9,14 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 void takePicture();
+void camera_thread_function();
+
 int pic_num = 0;
 int song_num = 0;
-int list_size = -2;//starts at -2 to account for . and ..
+int list_size = -2; //starts at -2 to account for . and ..
 char out[BUFSIZ];
 
 
@@ -65,24 +68,27 @@ int main()
 		list_size++;
     }
     closedir(dir);
-	printf("size is: %i\n",list_size);
+
+	//printf("size is: %i\n",list_size);
 	char song_list[list_size][BUFSIZ];
 	init_music(song_list);
-    //takePicture();
-    return 0;int res;
-pthread_t a_thread[NUM_THREADS];
-void *thread_result;
-int lots_of_threads;
 
+    return 0;
 
-for(lots_of_threads = 0; lots_of_threads < NUM_THREADS; lots_of_threads++) {
-res = pthread_create(&(a_thread[lots_of_threads]), NULL,
-thread_function, (void *)lots_of_threads);
-if (res != 0) {
-perror(“Thread creation failed”);
-exit(EXIT_FAILURE);
+    int res;
+    pthread_t camera_thread;
+    pthread_t communication_thread;
+    void *thread_result;
+ 
+   res = pthread_create(camera_thread, NULL, camera_thread_function, (void *)1);
+	
+	if (res != 0) {
+	//	perror(“Thread creation failed”);
+		exit(EXIT_FAILURE);
+	}
 }
-}void takePicture()
+
+void takePicture()
 {
     //create a linux command string to take a picture using a webcam and properly date them
     sprintf(out,"fswebcam -r 1280x720 --no-banner ./pictures/image%i.jpg",pic_num);
@@ -148,12 +154,23 @@ void previous_song(char song_list[list_size][BUFSIZ])
 	play_song(song_list);
     }
 }
-void camera_thread
+void camera_thread_function()
 {
 	while(1){
 		sleep(30);
-		take_picture();
+		takePicture();
 	}
 }
 
+void communication_thread_function()
+{
+	while(1)
+	{
+		sleep(1);
+		//read(sockfd, &ch, 1);
+		//printf("char from server = %c\n", ch);
+
+	}
+
 }
+
