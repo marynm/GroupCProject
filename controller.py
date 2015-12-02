@@ -21,7 +21,7 @@ def button_monitor():
 
 		elif(p.digital_read(1)):		#button 1 pressed: confirm current selection
 			sleep(0.5)
-			if(bot_done()):			#cannot send bot to new position while it is still carrying out a previous move command
+			if(bot_done() == 1):			#cannot send bot to new position while it is still carrying out a previous move command
 				move_bot(position)
 				flash_lights()	
 				position_lights(position)
@@ -51,8 +51,6 @@ def move_bot(position):
 
 	return position
 
-
-
 def take_picture():
 #send message to bot telling it to take a picture
 	send_message_to_bot("camera")
@@ -74,17 +72,24 @@ def alert_dispenser():
 
 def send_message_to_bot(msg):
 #convert the passed message string to bytes and send the message to the bot
-	#print("Sending message '" + msg + "' to bot.")		#print statement for degugging
+	print("Sending message '" + msg + "' to bot.")		#print statement for debugging
+	MESSAGE = ""
 	MESSAGE = bytes(msg, "utf-8")
-	conn.send(MESSAGE)		#NOTE -> comment this out for testing functions independently (without message connections set up)
+	conn.send(MESSAGE)		#NOTE -> comment this out for unit testing functions independently (without message connections set up)
 
 
 def bot_done():
 	#receive a message from the bot to check if bot is still carrying out the last command
-	send_message_to_bot("done?")
+	send_message_to_bot("done")
 	data = conn.recv(BUFFER_SIZE)	#receive response from bot
-	msg = data.decode("utf-8")
-	if(msg == "done"):
+	print("Received message '" + str(data[0]) + "' from bot.")
+	#msg = data.decode("utf-8")
+	#data.strip("\r\n".encode("utf-8"))
+	#data.encode("utf-8").strip()
+	#msg = data.decode("utf-8")
+	#print("Received message '" + msg + "' from bot.")
+	if(data[0] == 121):
+		print("got yes")
 		return 1
 	else:
 		return 0
@@ -172,7 +177,7 @@ if __name__ == '__main__':
 	print("TCP connection with Bot set up")		#print statement for degugging
 	
 	#UDP for communication with dispenser
-	UDP_IP = "10.0.0.21"	#IP of dispenser device
+	UDP_IP = "10.0.0.25"	#IP of dispenser device
 	UDP_PORT = 5005
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 	
