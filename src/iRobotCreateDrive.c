@@ -249,13 +249,13 @@ void PositionMover(int pos_x, int pos_y)
 			{
 				//Upper Left
 				//Find Angle
-				if(cur_Angle < (angle_use + 90))
+				if(cur_Angle < ((90 - angle_use) + 90))
 				{
 					goLeft(180 - angle_use - cur_Angle);
 				}
 				else
 				{
-					goRight(cur_Angle - (angle_use + 90));
+					goRight(cur_Angle - 180 + angle_use);
 				}
 				cur_Angle = 180 - angle_use;
 				//Give hypotenuse
@@ -270,6 +270,7 @@ void PositionMover(int pos_x, int pos_y)
 			{
 				//Lower Left
 				//Find Angle
+				
 				if(cur_Angle < (angle_use + 180))
 				{
 					goLeft((angle_use + 180) - cur_Angle);
