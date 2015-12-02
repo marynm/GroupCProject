@@ -311,11 +311,11 @@ void goLeft(int deg)
 	}
     data[0] = 128;
     data[1] = 131;
-    data[2] = 145;
+    data[2] = 137;
     data[3] = 0;
     data[4] = 32;
-    data[5] = 255;
-    data[6] = 223;
+    data[5] = 0;
+    data[6] = 1;
     data[7] = 157;
     data[8] = 0;
     data[9] = deg;
@@ -330,11 +330,11 @@ void goRight(int deg)
 	}
     data[0] = 128;
     data[1] = 131;
-    data[2] = 145;
+    data[2] = 137;
     data[3] = 255;
     data[4] = 223;
-    data[5] = 0;
-    data[6] = 32;
+    data[5] = 0xFF;
+    data[6] = 0xFF;
     data[7] = 157;
     data[8] = 0xFF;
     data[9] = (deg ^ 0xFF) + 1;
