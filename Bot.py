@@ -87,8 +87,8 @@ if __name__ == '__main__':
 	#directory = "./Music"		#????
 	#directoryList = get_files(directory) #os.listdir(directory)
 	
-	#while 1:
-		#receive_command()
+	while 1:
+		receive_command()
 
 
 

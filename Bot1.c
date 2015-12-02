@@ -29,6 +29,7 @@ int main()
     struct sockaddr_in address;
     int result;
     char command[msg_size];
+    int location = 0;
 
 /*  Create a socket for the client.  */
 
@@ -37,8 +38,8 @@ int main()
 /*  Name the socket, as agreed with the server.  */
 
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = inet_addr("127.0.0.1");
-    address.sin_port = 9734;
+    address.sin_addr.s_addr = inet_addr("10.0.0.32");
+    address.sin_port = htons(5002);
     len = sizeof(address);
 
 /*  Now connect our socket to the server's socket.  */
@@ -52,15 +53,12 @@ int main()
 
 /*  We can now read/write via sockfd.  */
 
-    //write(sockfd, &ch, 1);
-    //printf("char from server = %c\n", ch);
-    //close(sockfd);
-
 	DIR *dir;
     struct dirent *entry;
 
     if(!(dir = opendir("./music/")))
     {
+	printf("opendir mistake\n");
 		return -1;
 	}
     while(entry = readdir(dir) != NULL)
@@ -69,39 +67,58 @@ int main()
     }
     closedir(dir);
 
-	//printf("size is: %i\n",list_size);
 	char song_list[list_size][BUFSIZ];
+	printf("init music");
 	init_music(song_list);
 
-    return 0;
 
     int res;
     pthread_t camera_thread;
     pthread_t communication_thread;
     void *thread_result;
+    int moving = 0;
  
-   res = pthread_create(camera_thread, NULL, camera_thread_function, (void *)1);
-	
+   /*res = pthread_create(camera_thread, NULL, camera_thread_function, (void *)1);
+
 	if (res != 0) {
 	//	perror(“Thread creation failed”);
 		exit(EXIT_FAILURE);
 	}
+	*/
 
-	//communication thread:
-
+	//communication:
 	while(1)
 	{
+		
 		//constantly monitor for messages
-		//read(sockfd, &command, 1);
-		//printf("char from server = %c\n", ch);
-		//if received a 'done?' prompt, respond with done or not done
-		if(strcmp(command, "done?")
+		read(sockfd, &command, 1024);
+		printf("Received msg: %s\n", command);
+		//if received 'done' prompt, respond with yes or no
+		if(strncmp(command, "done", 4) == 0)
 		{
-			printf("done?");
+			//if not currently carrying out a command
+			{
+				strcpy(command, "yes");
+				printf("Bot done. Sending msg %s\n", command);
+				write(sockfd, &command, 1024);
+			}
+			//else
+			{
+				//strcpy(command, "no");
+				//write(sockfd, &command, 1024);
+			}
+			
 		}
-		//if received a 'camera' message, take picture
-		//if received a 'music' message, change song
-		//if received a message containing a number, move to the position corresponding to that number
+		else if(strncmp(command, "camera", 6) == 0)
+			takePicture();
+		else if(strncmp(command, "music", 5) == 0)
+			printf("changing song\n");//change song
+		else //if received a message containing a number, move to the position corresponding to that number
+		{
+			location = atoi(command);
+			printf("moving bot to location %d\n", location);
+			//move bot to the location sent
+		}	
 	}
 }
 
@@ -171,6 +188,7 @@ void previous_song(char song_list[list_size][BUFSIZ])
 	play_song(song_list);
     }
 }
+
 void camera_thread_function()
 {
 	while(1){
@@ -178,4 +196,5 @@ void camera_thread_function()
 		takePicture();
 	}
 }
+
 
