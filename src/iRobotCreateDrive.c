@@ -431,14 +431,14 @@ main(int argc, char *argv[])
 	cur_x = 0;
 	cur_y = 0;
 	cur_Angle = 0;
-	pos1_x = 120;
-	pos1_y = 100;
-	pos2_x = 200;
-	pos2_y = 300;
-	pos3_x = 500;
-	pos3_y = 500;
-	pos4_x = 100;
-	pos4_y = 700;
+	pos1_x = 600;
+	pos1_y = 300;
+	pos2_x = 600;
+	pos2_y = 600;
+	pos3_x = 300;
+	pos3_y = 300;
+	pos4_x = 900;
+	pos4_y = 300;
 
 	while( 1 )
 	{
