@@ -305,6 +305,10 @@ char polldata()
 
 void goLeft(int deg)
 {
+	if (deg > 9)
+	{
+		deg = deg - 9;
+	}
     data[0] = 128;
     data[1] = 131;
     data[2] = 145;
@@ -320,6 +324,10 @@ void goLeft(int deg)
 
 void goRight(int deg)
 {
+	if (deg > 9)
+	{
+		deg = deg - 9;
+	}
     data[0] = 128;
     data[1] = 131;
     data[2] = 145;
