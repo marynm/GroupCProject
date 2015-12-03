@@ -27,11 +27,11 @@ int song_num = 0;
 int list_size = -2;//starts at -2 to account for . and ..
 double cur_x_change, cur_y_change;
 char ret;
-char data[256];
+char data[256];//this is the data to pass to the robot
 char running = FALSE;
-char out[BUFSIZ];
-char playing_song[BUFSIZ];
-char control_line[256];
+char out[BUFSIZ];//this is a general string used for executing system commands
+char playing_song[BUFSIZ];//this is to pass the current song to the music player thread
+char control_line[256];//this is to pass the iRobot's movment commands to the thread
 
 void SendToCreate( int fd, char *data, int length )
 {
