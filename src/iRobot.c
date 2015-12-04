@@ -714,8 +714,8 @@ int main()
 		else //command the bot
 		{
 			mystop = 0;
-			location = atoi(command);
-			location++;
+			location = NULL;
+			location = atoi(command) + 1;
 		}
 	}
 	s = pthread_join(aP, &res);
