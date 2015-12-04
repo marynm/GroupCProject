@@ -433,8 +433,8 @@ void *automated_pictures(void *arg)
 	while(running)
 	{
 		printf("took picture\n");
-		takePicture();
 		sleep(30);
+		takePicture();
 	}
 	pthread_exit("Automated Pictures Exit");
 }
@@ -522,69 +522,73 @@ void *robot_control(void *arg)
 			if(!mystop)
 			{
 				//Go to Dispenser
-				if(location == 1)
+				if(location == 7)
 				{
+					mystop = 1;
 					PositionMover(pos1_x, pos1_y);
 					stop();
-					mystop = 1;
 				}
 
 				//Go to Position Two
 				if(location == 2)
 				{
+					mystop = 1;
 					PositionMover(pos2_x, pos2_y);
 					stop();
-					mystop = 1;
 				}
 
 				//Go to Position Three
 				if(location == 3)
 				{
+					mystop = 1;
 					PositionMover(pos3_x, pos3_y);
 					stop();
-					mystop = 1;
 				}
 
 				//Go to Position Four
 				if(location == 4)
 				{
+					mystop = 1;
 					PositionMover(pos4_x, pos4_y);
 					stop();
-					mystop = 1;
 				}
 					
 				//Go to Position Five
 				if(location == 5)
 				{
+					mystop = 1;
 					PositionMover(pos5_x, pos5_y);
 					stop();
-					mystop = 1;
 				}
 					
 				//Go to Position Six
 				if(location == 6)
 				{
+					mystop = 1;
 					PositionMover(pos6_x, pos6_y);
 					stop();
-					mystop = 1;
 				}
 					
 				//Go to Position Seven
 				if(location == 7)
 				{
+					mystop = 1;
 					PositionMover(pos7_x, pos7_y);
 					stop();
-					mystop = 1;
 				}
 					
 				//Go to Fuck-It
-				if(location == 8)
+				if(location == 1)
 				{
 					pos8_x = rand()%1000 + 1;
 					pos8_y = rand()%1000 + 1;
 					PositionMover(pos4_x, pos4_y);
 					stop();
 				}
+			}
+			else
+			{
+				sleep(1);
 			}
 		}
 	}
@@ -699,9 +703,9 @@ int main()
 		}
 		else //command the bot
 		{
+			mystop = 0;
 			location = atoi(command);
 			location++;
-			mystop = 0;
 		}
 	}
 	s = pthread_join(aP, &res);
