@@ -208,6 +208,7 @@ void PositionMover(int pos_x, int pos_y)
 				{
 					goLeft(360 - cur_Angle + angle_use);
 				}
+				stop();
 				cur_Angle = angle_use;
 				//Give hypotenuse
 				goForward(dist_use);
@@ -233,6 +234,7 @@ void PositionMover(int pos_x, int pos_y)
 				{
 					goRight(cur_Angle + angle_use);
 				}
+				stop();
 				cur_Angle = 360 - angle_use;
 				//Give hypotenuse
 				goForward(dist_use);
@@ -258,6 +260,7 @@ void PositionMover(int pos_x, int pos_y)
 				{
 					goRight(cur_Angle - 180 + angle_use);
 				}
+				stop();
 				cur_Angle = 180 - angle_use;
 				//Give hypotenuse
 				goForward(dist_use);
@@ -280,6 +283,7 @@ void PositionMover(int pos_x, int pos_y)
 				{
 					goRight(cur_Angle - (angle_use + 180));
 				}
+				stop();
 				cur_Angle = angle_use + 180;
 				//Give hypotenuse
 				goForward(dist_use);
