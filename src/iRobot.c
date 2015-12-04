@@ -525,6 +525,7 @@ void *robot_control(void *arg)
 	pos6_y = 234;
 	pos7_x = 345;
 	pos7_y = 645;
+	superstop();
 
 	while(running)
 	{
