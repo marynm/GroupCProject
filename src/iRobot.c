@@ -21,7 +21,7 @@
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
 
-int fd, i, ch, pos, cur_x, cur_y, cur_Angle, dist_travel;
+int fd, i, ch, pos, cur_x, cur_y, cur_Angle, dist_travel, location;
 int pic_num = 0;
 int song_num = 0;
 int mystop = 0;
@@ -516,80 +516,73 @@ void *robot_control(void *arg)
 	while(running)
 	{
 		usleep( 250000 );
-		if(control_line[0] == '^')
+		if(location)
 		{
-			if( isdigit( control_line[1] ) && isdigit( control_line[2] ) && isdigit( control_line[3] ) )
+			if(!mystop)
 			{
-				pos = ((control_line[1]-0x30)*100) +
-				      ((control_line[2]-0x30)*10) +
-				      ((control_line[3]-0x30));
-				      
-				if(!mystop)
+				//Go to Dispenser
+				if(location == 1)
 				{
-					//Go to Dispenser
-					if(pos == 001)
-					{
-						PositionMover(pos1_x, pos1_y);
-						stop();
-						mystop = 1;
-					}
+					PositionMover(pos1_x, pos1_y);
+					stop();
+					mystop = 1;
+				}
 
-					//Go to Position Two
-					if(pos == 002)
-					{
-						PositionMover(pos2_x, pos2_y);
-						stop();
-						mystop = 1;
-					}
+				//Go to Position Two
+				if(location == 2)
+				{
+					PositionMover(pos2_x, pos2_y);
+					stop();
+					mystop = 1;
+				}
 
-					//Go to Position Three
-					if(pos == 003)
-					{
-						PositionMover(pos3_x, pos3_y);
-						stop();
-						mystop = 1;
-					}
+				//Go to Position Three
+				if(location == 3)
+				{
+					PositionMover(pos3_x, pos3_y);
+					stop();
+					mystop = 1;
+				}
 
-					//Go to Position Four
-					if(pos == 004)
-					{
-						PositionMover(pos4_x, pos4_y);
-						stop();
-						mystop = 1;
-					}
+				//Go to Position Four
+				if(location == 4)
+				{
+					PositionMover(pos4_x, pos4_y);
+					stop();
+					mystop = 1;
+				}
 					
-					//Go to Position Five
-					if(pos == 005)
-					{
-						PositionMover(pos5_x, pos5_y);
-						stop();
-						mystop = 1;
-					}
+				//Go to Position Five
+				if(location == 5)
+				{
+					PositionMover(pos5_x, pos5_y);
+					stop();
+					mystop = 1;
+				}
 					
-					//Go to Position Six
-					if(pos == 006)
-					{
-						PositionMover(pos6_x, pos6_y);
-						stop();
-						mystop = 1;
-					}
+				//Go to Position Six
+				if(location == 6)
+				{
+					PositionMover(pos6_x, pos6_y);
+					stop();
+					mystop = 1;
+				}
 					
-					//Go to Position Seven
-					if(pos == 007)
-					{
-						PositionMover(pos7_x, pos7_y);
-						stop();
-						mystop = 1;
-					}
+				//Go to Position Seven
+				if(location == 7)
+				{
+					PositionMover(pos7_x, pos7_y);
+					stop();
+					mystop = 1;
+				}
 					
-					//Go to Fuck-It
-					if(pos == 008)
-					{
-						pos8_x = rand()%1000 + 1;
-						pos8_y = rand()%1000 + 1;
-						PositionMover(pos4_x, pos4_y);
-						stop();
-					}
+				//Go to Fuck-It
+				if(location == 8)
+				{
+					pos8_x = rand()%1000 + 1;
+					pos8_y = rand()%1000 + 1;
+					PositionMover(pos4_x, pos4_y);
+					stop();
 				}
 			}
 		}
@@ -605,6 +598,32 @@ int main()
 	int s;
 	DIR *dir;
 	struct dirent *entry;
+	
+	int sockfd;
+    int len;
+    struct sockaddr_in address;
+    int result;
+    char command[msg_size];
+
+/*  Create a socket for the client.  */
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+
+/*  Name the socket, as agreed with the server.  */
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = inet_addr("10.0.0.32");
+    address.sin_port = htons(5002);
+    len = sizeof(address);
+
+/*  Now connect our socket to the server's socket.  */
+
+    result = connect(sockfd, (struct sockaddr *)&address, len);
+
+    if(result == -1) {
+        perror("oops: client");
+        exit(1);
+    }
 
 	if(!(dir = opendir("./music/")))
 	{
@@ -635,17 +654,29 @@ int main()
 	}
 	while(running)
 	{
+		//constantly monitor for messages
+		read(sockfd, &command, 1024);
 		int option = 20;
 		//get option from network
-		if(option == 0)
+		if(strncmp(command, "done", 4) == 0)
 		{
-			running = FALSE;
+				if(mystop)
+				{
+					strcpy(command, "yes");
+					//printf("Bot done. Sending msg %s\n", command);
+					write(sockfd, &command, 1024);
+				}
+				else
+				{
+					strcpy(command, "no");
+					write(sockfd, &command, 1024);
+				}
 		}
-		else if(option == 1)//manually take a picture
+		else if(strncmp(command, "camera", 6) == 0)//manually take a picture
 		{
 			takePicture();
 		}
-		else if(option == 2)//choose next song
+		else if(strncmp(command, "music", 5) == 0)//choose next song
 		{
 			next_song(song_list);
 			s = pthread_cancel(m);
@@ -664,12 +695,11 @@ int main()
 				printf("Error pthread_create m returned: %i\n", s);
 			}
 		}
-		else if(option == 3)//command the bot
+		else //command the bot
 		{
-			/*
-			 *not sure if the positions should be nested here or
-			 *just have more else if statements and have the default be roam the party
-			 */
+			location = atoi(command);
+			location++;
+			mystop = 0;
 		}
 	}
 	s = pthread_join(aP, &res);
