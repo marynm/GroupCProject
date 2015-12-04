@@ -433,7 +433,7 @@ void *automated_pictures(void *arg)
 	while(running)
 	{
 		printf("took picture\n");
-		//takePicture();
+		takePicture();
 		sleep(30);
 	}
 	pthread_exit("Automated Pictures Exit");
@@ -661,15 +661,16 @@ int main()
 		//get option from network
 		if(strncmp(command, "done", 4) == 0)
 		{
-				if(mystop)
+				if(!mystop)
 				{
 					strcpy(command, "yes");
-					//printf("Bot done. Sending msg %s\n", command);
+					printf("Bot done. Sending msg %s\n", command);
 					write(sockfd, &command, 1024);
 				}
 				else
 				{
 					strcpy(command, "no");
+					printf("sending message: %s\n");
 					write(sockfd, &command, 1024);
 				}
 		}
