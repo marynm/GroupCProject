@@ -21,9 +21,7 @@
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
 
-int fd, i, ch, pos, cur_Angle, dist_travel, location;
-int cur_x = 50;
-int cur_y = 50;
+int fd, i, ch, pos, cur_x, cur_y, cur_Angle, dist_travel, location;
 int msg_size = 20;
 int pic_num = 0;
 int song_num = 0;
@@ -498,8 +496,8 @@ void *robot_control(void *arg)
 
 
 	//Define coordinates
-	cur_x = 0;
-	cur_y = 0;
+	cur_x = 50;
+	cur_y = 50;
 	cur_Angle = 0;
 	pos1_x = 50;
 	pos1_y = 50;
