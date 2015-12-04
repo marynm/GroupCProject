@@ -21,7 +21,9 @@
 #define BAUDRATE B57600
 #define SERPORT "/dev/ttyUSB0"
 
-int fd, i, ch, pos, cur_x, cur_y, cur_Angle, dist_travel, location;
+int fd, i, ch, pos, cur_Angle, dist_travel, location;
+int cur_x = 50;
+int cur_y = 50;
 int msg_size = 20;
 int pic_num = 0;
 int song_num = 0;
@@ -499,8 +501,8 @@ void *robot_control(void *arg)
 	cur_x = 0;
 	cur_y = 0;
 	cur_Angle = 0;
-	pos1_x = 600;
-	pos1_y = 300;
+	pos1_x = 50;
+	pos1_y = 50;
 	pos2_x = 600;
 	pos2_y = 600;
 	pos3_x = 300;
@@ -527,6 +529,7 @@ void *robot_control(void *arg)
 					mystop = 1;
 					PositionMover(pos1_x, pos1_y);
 					stop();
+					mystop = 0;
 				}
 
 				//Go to Position Two
@@ -535,6 +538,7 @@ void *robot_control(void *arg)
 					mystop = 1;
 					PositionMover(pos2_x, pos2_y);
 					stop();
+					mystop = 0;
 				}
 
 				//Go to Position Three
@@ -543,6 +547,7 @@ void *robot_control(void *arg)
 					mystop = 1;
 					PositionMover(pos3_x, pos3_y);
 					stop();
+					mystop = 0;
 				}
 
 				//Go to Position Four
@@ -551,6 +556,7 @@ void *robot_control(void *arg)
 					mystop = 1;
 					PositionMover(pos4_x, pos4_y);
 					stop();
+					mystop = 0;
 				}
 					
 				//Go to Position Five
@@ -559,6 +565,7 @@ void *robot_control(void *arg)
 					mystop = 1;
 					PositionMover(pos5_x, pos5_y);
 					stop();
+					mystop = 0;
 				}
 					
 				//Go to Position Six
@@ -567,6 +574,7 @@ void *robot_control(void *arg)
 					mystop = 1;
 					PositionMover(pos6_x, pos6_y);
 					stop();
+					mystop = 0;
 				}
 					
 				//Go to Position Seven
@@ -575,6 +583,7 @@ void *robot_control(void *arg)
 					mystop = 1;
 					PositionMover(pos7_x, pos7_y);
 					stop();
+					mystop = 0;
 				}
 					
 				//Go to Fuck-It
@@ -584,6 +593,7 @@ void *robot_control(void *arg)
 					pos8_y = rand()%1000 + 1;
 					PositionMover(pos4_x, pos4_y);
 					stop();
+					mystop = 0;
 				}
 			}
 			else
