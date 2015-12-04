@@ -22,6 +22,7 @@
 #define SERPORT "/dev/ttyUSB0"
 
 int fd, i, ch, pos, cur_x, cur_y, cur_Angle, dist_travel, location;
+int msg_size = 20;
 int pic_num = 0;
 int song_num = 0;
 int mystop = 0;
