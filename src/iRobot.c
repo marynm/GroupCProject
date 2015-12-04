@@ -379,6 +379,18 @@ void stop()
 	SendToCreate( fd, data, 7 );
 }
 
+void superstop()
+{
+	data[0] = 128;
+	data[1] = 132;
+	data[2] = 145;
+	data[3] = 0;
+	data[4] = 0;
+	data[5] = 0;
+	data[6] = 0;
+	SendToCreate( fd, data, 7 );
+}
+
 void takePicture()
 {
 	//create a linux command string to take a picture using a webcam and properly date them
@@ -526,6 +538,14 @@ void *robot_control(void *arg)
 			if(!mystop)
 			{
 				//Go to Dispenser
+				if(location == 8)
+				{
+					mystop = 1;
+					PositionMover(pos1_x, pos1_y);
+					stop();
+					mystop = 0;
+				}
+				
 				if(location == 7)
 				{
 					mystop = 1;
@@ -574,17 +594,7 @@ void *robot_control(void *arg)
 				if(location == 6)
 				{
 					mystop = 1;
-					PositionMover(pos6_x, pos6_y);
-					stop();
-					mystop = 0;
-				}
-					
-				//Go to Position Seven
-				if(location == 7)
-				{
-					mystop = 1;
-					PositionMover(pos7_x, pos7_y);
-					stop();
+					superstop();
 					mystop = 0;
 				}
 					
