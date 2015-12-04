@@ -24,6 +24,7 @@
 int fd, i, ch, pos, cur_x, cur_y, cur_Angle, dist_travel;
 int pic_num = 0;
 int song_num = 0;
+int mystop = 0;
 int list_size = -2;//starts at -2 to account for . and ..
 double cur_x_change, cur_y_change;
 char ret;
@@ -449,7 +450,7 @@ void *robot_control(void *arg)
 	struct 	termios tty;
 	char	*result;
 	int 	flags = fcntl(STDIN_FILENO, F_GETFL);
-	int	pos1_x, pos1_y, pos2_x, pos2_y, pos3_x, pos3_y, pos4_x, pos4_y;
+	int	pos1_x, pos1_y, pos2_x, pos2_y, pos3_x, pos3_y, pos4_x, pos4_y, pos5_x, pos5_y, pos6_x, pos6_y, pos7_x, pos7_y, pos8_x, pos8_y;
 
 	printf( "\nOpeneing serial port: %s", SERPORT );
 	fd = open(SERPORT, O_RDWR);      			//open the serial port
@@ -505,6 +506,12 @@ void *robot_control(void *arg)
 	pos3_y = 300;
 	pos4_x = 900;
 	pos4_y = 300;
+	pos5_x = 666;
+	pos5_y = 666;
+	pos6_x = 198;
+	pos6_y = 234;
+	pos7_x = 345;
+	pos7_y = 645;
 
 	while(running)
 	{
@@ -516,61 +523,73 @@ void *robot_control(void *arg)
 				pos = ((control_line[1]-0x30)*100) +
 				      ((control_line[2]-0x30)*10) +
 				      ((control_line[3]-0x30));
-				if(pos == 500)
+				      
+				if(!mystop)
 				{
-				    goForward(300);
-				    continue;
-				}
+					//Go to Dispenser
+					if(pos == 001)
+					{
+						PositionMover(pos1_x, pos1_y);
+						stop();
+						mystop = 1;
+					}
 
-				//Go to Position One
-				if(pos == 001)
-				{
-					PositionMover(pos1_x, pos1_y);
-					stop();
-				}
+					//Go to Position Two
+					if(pos == 002)
+					{
+						PositionMover(pos2_x, pos2_y);
+						stop();
+						mystop = 1;
+					}
 
-				//Go to Position Two
-				if(pos == 002)
-				{
-					PositionMover(pos2_x, pos2_y);
-					stop();
-				}
+					//Go to Position Three
+					if(pos == 003)
+					{
+						PositionMover(pos3_x, pos3_y);
+						stop();
+						mystop = 1;
+					}
 
-				//Go to Position Three
-				if(pos == 003)
-				{
-					PositionMover(pos3_x, pos3_y);
-					stop();
-				}
-
-				//Go to Position Four
-				if(pos == 004)
-				{
-					PositionMover(pos4_x, pos4_y);
-					stop();
-				}
-
-				if(pos == 777)
-				{
-					// send STOP
-		            stop();
-					continue;
-				}
-
-				if( pos == 420)
-				{
-					// turn left
-					goLeft(90);
-					printf( "\nleft" );
-					continue;
-				}
-
-				if( pos == 666 )
-				{
-					// trun right
-					goRight(90);
-					printf( "\nright" );
-					continue;
+					//Go to Position Four
+					if(pos == 004)
+					{
+						PositionMover(pos4_x, pos4_y);
+						stop();
+						mystop = 1;
+					}
+					
+					//Go to Position Five
+					if(pos == 005)
+					{
+						PositionMover(pos5_x, pos5_y);
+						stop();
+						mystop = 1;
+					}
+					
+					//Go to Position Six
+					if(pos == 006)
+					{
+						PositionMover(pos6_x, pos6_y);
+						stop();
+						mystop = 1;
+					}
+					
+					//Go to Position Seven
+					if(pos == 007)
+					{
+						PositionMover(pos7_x, pos7_y);
+						stop();
+						mystop = 1;
+					}
+					
+					//Go to Fuck-It
+					if(pos == 008)
+					{
+						pos8_x = rand()%1000 + 1;
+						pos8_y = rand()%1000 + 1;
+						PositionMover(pos4_x, pos4_y);
+						stop();
+					}
 				}
 			}
 		}
