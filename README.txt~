@@ -8,13 +8,11 @@ Files:
 	Files for operation:
 	controller.py
 	dispener.py
-	/src/iRobot.c
+	bot.c
 
 	Additional Files (testing etc.):
 	controllerTest.py
 	DispenserTest.py
-	Bot.py
-	audioTest.py
 
 -----------------------------------------
 Hardware Setup:
@@ -32,7 +30,7 @@ Note: For set up connect each pi to a monitor. Once its code is running the moni
 
 2. On Raspberry Pi 2 run dispenser.py.
 
-3. On Raspberry Pi 3 run iRobot.c (made with MakeFile). Once running the monitor and other hardware must be disconnected (monitor, mouse, and keyboard) so that the bot can move freely.
+3. On Raspberry Pi 3 run bot.c. Once running the monitor and other hardware must be disconnected (monitor, mouse, and keyboard) so that the bot can move freely.
 
 -----------------------------------------
 Operation:
