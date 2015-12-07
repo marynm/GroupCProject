@@ -1,3 +1,5 @@
+//Code Contributions
+
 Preeti:
       Bot.py
       dispenserTest
@@ -6,11 +8,32 @@ Preeti:
       
 Maryn:
     controller.py
+    controllerTest
     audioTest
+    readme file
     
 Kevin:
     iRobot.py
+    iRobotcreate
     
 Zack:
+    Worked with Kevin on determining angle of bot
     Helped everyone when they were stuck on code
     Pushed and pulled on GitHub generally
+
+
+//Report Contribution
+Maryn:   
+      Introduction
+      System Design
+      Discussion (elaborated By Preeti)
+      
+Preeti:
+      System Design Architecture Diagram
+      UML Diagrams- Use Case Diagram, Class Diagram, Sequence Diagrams (helped by Maryn)
+      Testing Strategy edited by Maryn
+      Project Milestones
+      Technical Recommendations (elaborated by Maryn)
+      Conclusion
+      
+      
