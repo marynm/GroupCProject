@@ -45,3 +45,6 @@ Using the bottons on the controller the bot can be moved around the space and pr
 	3. Button 3 takes a picture.
 	4. Button 4 changes the music.
 
+
+
+Note: Rescources for development of iRobot code found at http://www.instructables.com/id/Using-the-iRobot-Create-s-Command-Module-with-Linu/?ALLSTEPS
