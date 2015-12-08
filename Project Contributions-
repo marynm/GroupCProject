@@ -14,12 +14,15 @@ Maryn:
     
 Kevin:
     iRobot.py
-    iRobotcreate
+    iRobot.c
+    iRobotcreate.c (gone now as it was just test code that was eventually implemented into iRobot.c)
     
 Zack:
-    Worked with Kevin on determining angle of bot
+    Worked with Kevin on the bot
     Helped everyone when they were stuck on code
+    Helped fix git pull/push issues
     Pushed and pulled on GitHub generally
+    iRobot.c
 
 
 //Report Contribution
